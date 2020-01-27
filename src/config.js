@@ -1,0 +1,4 @@
+export default {
+  TESTNET: true,
+  BASE_AA: "WZFFFKQR4XRFQKR6NFV7Z7ICDOS67FEX"
+};
