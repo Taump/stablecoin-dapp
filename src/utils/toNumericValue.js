@@ -1,5 +1,5 @@
-const toNumericValue = (value, quotes = true) => {
-  const t = /^-{0,1}\d+$/.test(value);
+export const toNumericValue = (value, quotes = true) => {
+  const t = /^[0-9.]+$/.test(value);
   if (t && value <= Number.MAX_SAFE_INTEGER) {
     return Number(value);
   } else {
@@ -10,5 +10,3 @@ const toNumericValue = (value, quotes = true) => {
     }
   }
 };
-
-export default toNumericValue;

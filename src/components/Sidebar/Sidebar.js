@@ -1,29 +1,33 @@
 import React from "react";
 import { Layout, Menu, Icon } from "antd";
 import { NavLink } from "react-router-dom";
-
+import { useTranslation } from "react-i18next";
 import styles from "../Sidebar/Sidebar.module.css";
-
+import i18n from "../../i18n";
 const { Sider } = Layout;
 
-const dataMenu = [
-  { key: "home", icon: "home", title: "Home", path: "/" },
-  { key: "deploy", icon: "plus-circle", title: "Deploy AA", path: "/deploy" },
-  // {
-  //   key: "search",
-  //   icon: "search",
-  //   title: "Search AA",
-  //   path: "/search"
-  // },
-  {
-    key: "asset",
-    icon: "setting",
-    title: "Issuing asset",
-    path: "/asset"
-  }
-];
-
 export const Sidebar = ({ active }) => {
+  const { t } = useTranslation("", { i18n });
+  const dataMenu = [
+    {
+      key: "home",
+      icon: "home",
+      title: t("pages.home.title"),
+      path: "/"
+    },
+    {
+      key: "deploy",
+      icon: "plus-circle",
+      title: t("pages.deploy.title"),
+      path: "/deploy"
+    },
+    {
+      key: "asset",
+      icon: "setting",
+      title: t("pages.asset.title"),
+      path: "/asset"
+    }
+  ];
   return (
     <Sider breakpoint="lg" collapsedWidth="0" className={styles.sider}>
       <div className={styles.logo}>

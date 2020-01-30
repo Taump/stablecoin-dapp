@@ -1,0 +1,75 @@
+{
+  "test": "test page",
+  "pages": {
+    "home": {
+      "title": "Home"
+    },
+    "asset": {
+      "title": "Issuing Asset",
+      "status": {
+        "pending" : {
+          "title": "Issue asset",
+          "subTitle": "As soon as we receive a request to issue an asset, you will proceed to the next step",
+          "button": "Issue"
+        },
+        "success" : {
+          "title": "Autonomous agent successfully configured",
+          "button": "Go home page"
+        }
+      }
+    },
+    "deploy": {
+      "title": "Deploy",
+      "cancel": {
+        "title": "We are waiting for your deployment request",
+        "subTitle": "After that, you will be redirected to the asset issue page",
+        "button": "Cancel"
+      }
+    }
+  },
+  "notifications": {
+    "deploy": {
+      "req": {
+        "title": "Deployment Request for New AA",
+        "subTitle": "Its address is {{address}}"
+      },
+      "res": {
+        "title": "AA was successfully deployed",
+        "subTitle": "Its address is {{address}}"
+      }
+    },
+    "asset": {
+      "req": {
+        "title": "Request for issue asset"
+      },
+      "res": {
+        "title": "Asset was issued"
+      }
+    }
+  },
+  "forms": {
+    "deploy": {
+      "fields": {
+        "auctionPeriod" : "Auction period (seconds)",
+        "liquidationRatio" : "liquidation ratio",
+        "overCollateralizationRatio": "Over collateralization ratio",
+        "oracle": "Oracle",
+        "feedName": "Feed name",
+        "decimals": "Decimals",
+        "moFeedName": "Moving average feed name",
+        "maxLoan": "Max loan value in underlying",
+        "expiryDate": "Expiry date"
+      },
+      "submit": "Open deploy screen"
+    },
+    "error": {
+      "notValid": "{{field}} is not valid",
+      "required": "This field is required",
+      "maxChar": "The maximum number of characters is {{count}}",
+      "minNum": "The minimum value is {{count}}",
+      "maxNum": "The maximum value is {{count}}",
+      "datePassed": "This date has already passed",
+      "muchValue": "You entered too much value"
+    }
+  }
+}
