@@ -198,17 +198,29 @@ export const changeActiveAA = address => async (dispatch, getState) => {
       definitionActive && definitionActive[0].definition["1"].params;
     console.log(params);
     // const params = {};
+
     if (isValid || store.deploy.wasIssued) {
       if (store.deploy.wasIssued) {
         await dispatch({
           type: CHANGE_ACTIVE_AA,
-          payload: { address, aaVars: {}, params }
+          payload: { address, aaVars: {}, params, coins: {} }
         });
       } else {
         const aaState = await client.api.getAaStateVars({ address });
+        let coins = {};
+        for (const fields in aaState) {
+          const field = fields.split("_");
+          if (field.length === 2 && field[0] !== "circulating") {
+            const [name, type] = field;
+            coins[name] = {
+              ...coins[name],
+              [type]: aaState[fields]
+            };
+          }
+        }
         await dispatch({
           type: CHANGE_ACTIVE_AA,
-          payload: { address, aaVars: aaState, params }
+          payload: { address, aaVars: aaState, params, coins }
         });
       }
       const subscriptions = store.aa.subscriptions;

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, Typography } from "antd";
 import { useSelector } from "react-redux";
 import { redirect } from "../../utils";
 import config from "../../config";
+const { Title } = Typography;
 export const IssueStablecoinFrom = ({ params }) => {
   const [value, setValue] = useState(0);
   const [count, setCount] = useState("");
@@ -34,7 +35,7 @@ export const IssueStablecoinFrom = ({ params }) => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <h2>Issue stablecoins</h2>
+      <Title level={3}>Issue stablecoins</Title>
       <Form.Item>
         <Input
           size="large"

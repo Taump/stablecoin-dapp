@@ -15,6 +15,7 @@ const initialState = {
   activeInfo: null,
   activeAssetRequest: false,
   activeParams: {},
+  activeCoins: {},
   subscribeBase: false,
   subscriptions: []
 };
@@ -67,6 +68,7 @@ export const aaReducer = (state = initialState, action) => {
         active: action.payload.address,
         activeInfo: action.payload.aaVars || null,
         activeParams: action.payload.params,
+        activeCoins: action.payload.coins,
         // activeBalance: {
         //   loading: false
         // },
