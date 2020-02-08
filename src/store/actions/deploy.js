@@ -25,7 +25,7 @@ export const deployRequest = address => async (dispatch, getState) => {
       payload: address
     });
   }
-  history.push("/asset");
+  history.push("/");
 };
 
 export const cancelPendingDeployRequest = () => ({

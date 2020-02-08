@@ -2,14 +2,13 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   // changeActiveAA,
-  // updateInfoActiveAA,
+  updateInfoActiveAA,
   watchRequestAas,
   // clearSubscribesAA,
   // subscribeActualAA,
   getAasByBase,
   subscribeBaseAA
 } from "../../store/actions/aa";
-import client from "../../socket";
 
 export const WatcherUpdate = props => {
   const dispatch = useDispatch();
@@ -29,17 +28,17 @@ export const WatcherUpdate = props => {
     watch();
   }, [dispatch, aaActive]);
 
-  // useEffect(() => {
-  //   if (aaActive) {
-  //     const update = setInterval(
-  //       () => dispatch(updateInfoActiveAA(aaActive)),
-  //       10000
-  //     );
-  //     return () => {
-  //       clearInterval(update);
-  //     };
-  //   }
-  // }, [aaActive, dispatch]);
+  useEffect(() => {
+    if (aaActive) {
+      const update = setInterval(
+        () => dispatch(updateInfoActiveAA(aaActive)),
+        10000
+      );
+      return () => {
+        clearInterval(update);
+      };
+    }
+  }, [aaActive, dispatch]);
 
   useEffect(() => {
     dispatch(watchRequestAas());

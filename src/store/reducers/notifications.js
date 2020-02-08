@@ -1,5 +1,3 @@
-import { ADD_AA_NOTIFICATION } from "../types/notifications";
-
 const initialState = {
   notifications: [],
   fullNotifications: [],

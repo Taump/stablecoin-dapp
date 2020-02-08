@@ -1,7 +1,7 @@
 import React from "react";
 import { Layout } from "../../components/Layout/Layout";
 import { SelectAA } from "../../components/SelectAA/SelectAA";
-import { Form, Row, Col, Result, Icon, Button } from "antd";
+import { Form, Row, Result, Icon, Button } from "antd";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import base64url from "base64url";

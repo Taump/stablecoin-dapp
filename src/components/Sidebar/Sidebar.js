@@ -20,12 +20,6 @@ export const Sidebar = ({ active }) => {
       icon: "plus-circle",
       title: t("pages.deploy.title"),
       path: "/deploy"
-    },
-    {
-      key: "asset",
-      icon: "setting",
-      title: t("pages.asset.title"),
-      path: "/asset"
     }
   ];
   return (

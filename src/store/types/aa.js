@@ -5,3 +5,4 @@ export const ADD_AA_TO_LIST = "ADD_AA_TO_LIST";
 export const SUBSCRIBE_AA = "SUBSCRIBE_AA";
 export const CHANGE_ACTIVE_AA = "CHANGE_ACTIVE_AA";
 export const ASSET_REQUEST = "ASSET_REQUEST";
+export const UPDATE_INFO_ACTIVE_AA = "UPDATE_INFO_ACTIVE_AA";

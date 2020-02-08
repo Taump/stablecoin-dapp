@@ -2,11 +2,12 @@ import { isEmpty } from "lodash";
 import { t } from "../utils";
 const createObjectResponseNotification = (data, aaVars) => {
   const address = data.aa_address;
+  const upd = data.updatedStateVars;
   if (!isEmpty(data.response)) {
     const res = data.response;
     const time = data.objResponseUnit && data.objResponseUnit.timestamp;
     const trigger_unit = data.trigger_unit;
-
+    console.log("RESPONSE", data);
     if (res.responseVars) {
       const resVars = res.responseVars;
       if ("asset" in resVars) {
@@ -14,6 +15,25 @@ const createObjectResponseNotification = (data, aaVars) => {
           AA: address,
           title: t("notifications.asset.res.title"),
           tag: "res_asset",
+          time,
+          trigger_unit
+        };
+      } else if ("amount" in resVars && "id" in resVars) {
+        console.log("ISSUE COIN ERSPONSE!");
+        return {
+          AA: address,
+          title: t("notifications.issueStablecoin.res.title", {
+            address: data.body.unit.authors["0"].address
+          }),
+          tag: "res_asset",
+          time,
+          trigger_unit
+        };
+      } else if ("collateral" in resVars) {
+        return {
+          AA: address,
+          title: t("notifications.addCollateral.res.title"),
+          tag: "res_collateral",
           time,
           trigger_unit
         };
@@ -29,13 +49,16 @@ const createObjectResponseNotification = (data, aaVars) => {
     } else {
       return undefined;
     }
+  } else if (upd) {
+    const keys = Object.keys(upd);
+    const action = keys[0].split("_")[1];
+    console.log("action", action);
   } else {
     return undefined;
   }
 };
 
 const createObjectRequestNotification = (data, aaVars) => {
-  console.log("data request", data);
   if (
     data.body.unit.messages[0].payload &&
     data.body.unit.messages[1] &&
@@ -49,8 +72,30 @@ const createObjectRequestNotification = (data, aaVars) => {
     if ("define" in payload) {
       return {
         AA,
-        title: t("notifications.asset.req.title"),
+        title: t("notifications.asset.req.title", {
+          address: data.body.unit.authors["0"].address
+        }),
         tag: "req_asset",
+        time,
+        trigger_unit
+      };
+    } else if ("repay" in payload) {
+      return {
+        AA,
+        title: t("notifications.repay.req.title", {
+          address: data.body.unit.authors["0"].address
+        }),
+        tag: "req_repay",
+        time,
+        trigger_unit
+      };
+    } else if ("add_collateral" in payload) {
+      return {
+        AA,
+        title: t("notifications.addCollateral.req.title", {
+          address: data.body.unit.authors["0"].address
+        }),
+        tag: "req_collateral",
         time,
         trigger_unit
       };
@@ -58,7 +103,26 @@ const createObjectRequestNotification = (data, aaVars) => {
       return undefined;
     }
   } else {
-    return undefined;
+    const time = data.body.unit.timestamp;
+    const trigger_unit = data.body.unit.unit;
+    const AA = data.body.aa_address;
+    const unit = data.body.unit;
+    if (
+      unit &&
+      unit.authors &&
+      unit.authors["0"] &&
+      unit.authors["0"].address
+    ) {
+      return {
+        AA,
+        title: t("notifications.issueStablecoin.req.title", {
+          address: data.body.unit.authors["0"].address
+        }),
+        tag: "req_asset",
+        time,
+        trigger_unit
+      };
+    }
   }
 };
 

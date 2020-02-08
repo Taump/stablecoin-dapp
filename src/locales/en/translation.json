@@ -2,24 +2,24 @@
   "test": "test page",
   "pages": {
     "home": {
-      "title": "Home"
-    },
-    "asset": {
-      "title": "Issuing Asset",
-      "status": {
-        "pending" : {
-          "title": "Issue asset",
-          "subTitle": "As soon as we receive a request to issue an asset, you will proceed to the next step",
-          "button": "Issue"
-        },
-        "success" : {
-          "title": "Autonomous agent successfully configured",
-          "button": "Go home page"
+      "title": "Home",
+      "asset": {
+        "title": "Issuing Asset",
+        "status": {
+          "pending" : {
+            "title": "Issue asset",
+            "subTitle": "As soon as we receive a request to issue an asset, you will proceed to the next step",
+            "button": "Issue"
+          },
+          "success" : {
+            "title": "Autonomous agent successfully configured",
+            "button": "Go home page"
+          }
         }
       }
     },
     "deploy": {
-      "title": "Deploy",
+      "title": "Create",
       "cancel": {
         "title": "We are waiting for your deployment request",
         "subTitle": "After that, you will be redirected to the asset issue page",
@@ -40,25 +40,76 @@
     },
     "asset": {
       "req": {
-        "title": "Request for issue asset"
+        "title": "Request for issue asset by {{address}}"
       },
       "res": {
         "title": "Asset was issued"
+      }
+    },
+    "issueStablecoin" : {
+      "req": {
+        "title": "Request for issue stablecoin by {{address}}"
+      },
+      "res": {
+        "title": "{{count}} stablecoins were issued"
+      }
+    },
+    "addCollateral" : {
+      "req": {
+        "title": "Request for add collateral by {{address}}"
+      },
+      "res": {
+        "title": "Collateral was add"
+      }
+    },
+    "repay" : {
+      "req": {
+        "title": "Request for repayment of the loan by {{address}}"
+      },
+      "res": {
+        "title": "addCollateral RESPONSE"
       }
     }
   },
   "forms": {
     "deploy": {
       "fields": {
-        "auctionPeriod" : "Auction period (seconds)",
-        "liquidationRatio" : "liquidation ratio",
-        "overCollateralizationRatio": "Over collateralization ratio",
-        "oracle": "Oracle",
-        "feedName": "Feed name",
-        "decimals": "Decimals",
-        "moFeedName": "Moving average feed name",
-        "maxLoan": "Max loan value in underlying",
-        "expiryDate": "Expiry date"
+        "auctionPeriod" : {
+          "name": "Auction period (seconds)",
+          "descr": "This is auctionPeriod...."
+        },
+        "liquidationRatio" : {
+          "name": "liquidation ratio",
+          "descr": "If the collateralization ratio of your loan drops below this value, the loan will be auctioned and sold to the highest bidder"
+        },
+        "overCollateralizationRatio": {
+          "name": "Over collateralization ratio",
+          "descr": "This is overCollateralizationRatio...."
+        },
+        "oracle": {
+          "name": "Oracle",
+          "descr": "This is oracle...."
+        },
+        "feedName": {
+          "name": "Feed name",
+          "descr": "This is feedName...."
+        },
+        "decimals": {
+          "name": "Decimals",
+          "descr": "This is decimals...."
+        },
+        "moFeedName": {
+          "name": "Moving average feed name",
+          "descr": "This is moFeedName...."
+        },
+        "maxLoan": {
+          "name": "Max loan value in underlying",
+          "descr": "This is maxLoan...."
+        },
+        "expiryDate": {
+          "name": "Expiry date",
+          "descr": "This is expiryDate...."
+        }
       },
       "submit": "Open deploy screen"
     },

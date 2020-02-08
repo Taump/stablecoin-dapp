@@ -5,7 +5,8 @@ import {
   ADD_AA_TO_LIST,
   SUBSCRIBE_AA,
   CHANGE_ACTIVE_AA,
-  ASSET_REQUEST
+  ASSET_REQUEST,
+  UPDATE_INFO_ACTIVE_AA
 } from "../types/aa";
 
 const initialState = {
@@ -16,6 +17,8 @@ const initialState = {
   activeAssetRequest: false,
   activeParams: {},
   activeCoins: {},
+  activeDataFeed: null,
+  activeDataFeedMa: null,
   subscribeBase: false,
   subscriptions: []
 };
@@ -69,10 +72,21 @@ export const aaReducer = (state = initialState, action) => {
         activeInfo: action.payload.aaVars || null,
         activeParams: action.payload.params,
         activeCoins: action.payload.coins,
+        activeDataFeed: action.payload.data_feed,
+        activeDataFeedMa: action.payload.data_feed_ma,
         // activeBalance: {
         //   loading: false
         // },
         activeAssetRequest: false
+      };
+    }
+    case UPDATE_INFO_ACTIVE_AA: {
+      return {
+        ...state,
+        activeInfo: action.payload.aaVars || null,
+        activeCoins: action.payload.coins,
+        activeDataFeed: action.payload.data_feed,
+        activeDataFeedMa: action.payload.data_feed_ma
       };
     }
     default:

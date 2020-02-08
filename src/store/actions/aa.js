@@ -7,7 +7,8 @@ import {
   SUBSCRIBE_AA,
   CHANGE_ACTIVE_AA,
   ADD_AA_TO_LIST,
-  ASSET_REQUEST
+  ASSET_REQUEST,
+  UPDATE_INFO_ACTIVE_AA
 } from "../types/aa";
 import { ADD_AA_NOTIFICATION } from "../types/notifications";
 import { deployRequest, pendingDeployResponse } from "../actions/deploy";
@@ -75,18 +76,11 @@ export const watchRequestAas = () => (dispatch, getState) => {
             result[1].body.messages[0].payload.definition &&
             result[1].body.messages[0].payload.definition[1] &&
             result[1].body.messages[0].payload.definition[1].params;
-          console.log(
-            "params",
-            params,
-            store.deploy.deployAaPrams,
-            isEqual(store.deploy.deployAaPrams, params)
-          );
           if (
             store.deploy.pending &&
             params &&
             isEqual(store.deploy.deployAaPrams, params)
           ) {
-            console.log("Is true");
             const address = result[1].body.messages[0].payload.address;
             const definition = result[1].body.messages[0].payload.definition;
             if (address && definition) {
@@ -165,6 +159,29 @@ export const watchRequestAas = () => (dispatch, getState) => {
             }
           }
         }
+      } else if (result[1].subject === "light/aa_response") {
+        console.log("resp", result);
+        const AA = result[1].body.aa_address;
+        const aaVars = await client.api.getAaStateVars({ address: AA });
+        if (result[1].body && result[1].body.response) {
+          const notificationObject = createObjectNotification.res(
+            result[1].body,
+            aaVars
+          );
+          if (
+            (notificationObject && notificationObject.AA === aaActive) ||
+            (!aaActive && notificationObject)
+          ) {
+            openNotificationRequest(
+              notificationObject.AA,
+              notificationObject.title
+            );
+            dispatch({
+              type: ADD_AA_NOTIFICATION,
+              payload: notificationObject
+            });
+          }
+        }
       }
     });
   } catch (e) {
@@ -198,12 +215,34 @@ export const changeActiveAA = address => async (dispatch, getState) => {
       definitionActive && definitionActive[0].definition["1"].params;
     console.log(params);
     // const params = {};
-
+    let data_feed;
+    let data_feed_ma;
+    try {
+      data_feed = await client.api.getDataFeed({
+        oracles: [params.oracle],
+        feed_name: params.feed_name,
+        ifnone: "none"
+      });
+      data_feed_ma = await client.api.getDataFeed({
+        oracles: [params.oracle],
+        feed_name: params.ma_feed_name,
+        ifnone: "none"
+      });
+    } catch (e) {
+      console.log(e);
+    }
     if (isValid || store.deploy.wasIssued) {
-      if (store.deploy.wasIssued) {
+      if (store.deploy.wasIssued === address) {
         await dispatch({
           type: CHANGE_ACTIVE_AA,
-          payload: { address, aaVars: {}, params, coins: {} }
+          payload: {
+            address,
+            aaVars: {},
+            params,
+            coins: {},
+            data_feed,
+            data_feed_ma
+          }
         });
       } else {
         const aaState = await client.api.getAaStateVars({ address });
@@ -220,7 +259,14 @@ export const changeActiveAA = address => async (dispatch, getState) => {
         }
         await dispatch({
           type: CHANGE_ACTIVE_AA,
-          payload: { address, aaVars: aaState, params, coins }
+          payload: {
+            address,
+            aaVars: aaState,
+            params,
+            coins,
+            data_feed,
+            data_feed_ma
+          }
         });
       }
       const subscriptions = store.aa.subscriptions;
@@ -234,6 +280,49 @@ export const changeActiveAA = address => async (dispatch, getState) => {
       console.log("Address is not found");
       notification["error"]({
         message: "Address is not found"
+      });
+    }
+  } catch (e) {
+    console.log("error", e);
+  }
+};
+
+export const updateInfoActiveAA = address => async (dispatch, getState) => {
+  try {
+    const store = getState();
+    if (store.deploy.wasIssued !== address) {
+      const params = store.aa.activeParams;
+      const aaState = await client.api.getAaStateVars({ address });
+      let data_feed;
+      let data_feed_ma;
+      try {
+        data_feed = await client.api.getDataFeed({
+          oracles: [params.oracle],
+          feed_name: params.feed_name,
+          ifnone: "none"
+        });
+        data_feed_ma = await client.api.getDataFeed({
+          oracles: [params.oracle],
+          feed_name: params.ma_feed_name,
+          ifnone: "none"
+        });
+      } catch (e) {
+        console.log(e);
+      }
+      let coins = {};
+      for (const fields in aaState) {
+        const field = fields.split("_");
+        if (field.length === 2 && field[0] !== "circulating") {
+          const [name, type] = field;
+          coins[name] = {
+            ...coins[name],
+            [type]: aaState[fields]
+          };
+        }
+      }
+      dispatch({
+        type: UPDATE_INFO_ACTIVE_AA,
+        payload: { address, aaVars: aaState, data_feed, data_feed_ma, coins }
       });
     }
   } catch (e) {

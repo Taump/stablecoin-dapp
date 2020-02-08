@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import obyte from "obyte";
 import { trim } from "lodash";
-import { Form, Input, Button, Row, Col, DatePicker } from "antd";
+import { Form, Input, Button, Row, Col, DatePicker, Icon, Tooltip } from "antd";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 
@@ -21,7 +21,7 @@ const initStateInput = {
 const defaultValues = {
   oracle: "F4KHJUCLJKY4JV7M5F754LAJX4EB7M4N",
   feedName: "GBYTE_USD",
-  maFeedName: "GBYTE_USD_MA",
+  maFeedName: "GBYTE_USD",
   maxLoan: "10000000000",
   decimals: "2",
   collateralizationRatio: "1.5",
@@ -311,7 +311,8 @@ export const DeployForm = ({ params }) => {
           hasFeedback
           validateStatus={oracle.error.status}
           help={oracle.error.help}
-          label={t("forms.deploy.fields.oracle")}
+          label={<LabelForm field="oracle" />}
+          colon={false}
         >
           <Input
             size="large"
@@ -326,7 +327,8 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={collateralizationRatio.error.status}
             help={collateralizationRatio.error.help}
-            label={t("forms.deploy.fields.overCollateralizationRatio")}
+            label={<LabelForm field="overCollateralizationRatio" />}
+            colon={false}
           >
             <Input
               size="large"
@@ -340,7 +342,8 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={liquidationRatio.error.status}
             help={liquidationRatio.error.help}
-            label={t("forms.deploy.fields.liquidationRatio")}
+            label={<LabelForm field="liquidationRatio" />}
+            colon={false}
           >
             <Input
               size="large"
@@ -354,7 +357,8 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={auctionPeriod.error.status}
             help={auctionPeriod.error.help}
-            label={t("forms.deploy.fields.auctionPeriod")}
+            label={<LabelForm field="auctionPeriod" />}
+            colon={false}
           >
             <Input
               size="large"
@@ -370,7 +374,8 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={feedName.error.status}
             help={feedName.error.help}
-            label={t("forms.deploy.fields.feedName")}
+            label={<LabelForm field="feedName" />}
+            colon={false}
           >
             <Input
               size="large"
@@ -384,7 +389,8 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={maFeedName.error.status}
             help={maFeedName.error.help}
-            label={t("forms.deploy.fields.moFeedName")}
+            label={<LabelForm field="moFeedName" />}
+            colon={false}
           >
             <Input
               size="large"
@@ -400,7 +406,8 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={maxLoan.error.status}
             help={maxLoan.error.help}
-            label={t("forms.deploy.fields.maxLoan")}
+            label={<LabelForm field="maxLoan" />}
+            colon={false}
           >
             <Input
               size="large"
@@ -415,7 +422,8 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={decimals.error.status}
             help={decimals.error.help}
-            label={t("forms.deploy.fields.decimals")}
+            label={<LabelForm field="decimals" />}
+            colon={false}
           >
             <Input
               size="large"
@@ -433,7 +441,8 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={expiryDate.error.status}
             help={expiryDate.error.help}
-            label={t("forms.deploy.fields.expiryDate")}
+            label={<LabelForm field="expiryDate" />}
+            colon={false}
           >
             <DatePicker
               size="large"
@@ -459,3 +468,14 @@ export const DeployForm = ({ params }) => {
     </Form>
   );
 };
+
+const LabelForm = ({ field, tooltip = true }) => (
+  <span style={{ verticalAlign: "middle" }}>
+    {tooltip && (
+      <Tooltip title={t(`forms.deploy.fields.${field}.descr`)} placement="top">
+        <Icon type="info-circle" style={{ color: "#808080" }} />
+      </Tooltip>
+    )}{" "}
+    {t(`forms.deploy.fields.${field}.name`)}:
+  </span>
+);

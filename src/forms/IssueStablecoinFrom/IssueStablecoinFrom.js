@@ -4,10 +4,9 @@ import { useSelector } from "react-redux";
 import { redirect } from "../../utils";
 import config from "../../config";
 const { Title } = Typography;
-export const IssueStablecoinFrom = ({ params }) => {
-  const [value, setValue] = useState(0);
+export const IssueStablecoinFrom = () => {
   const [count, setCount] = useState("");
-  const exchange_rate = 0.036337209302325583;
+  const exchange_rate = useSelector(state => state.aa.activeDataFeed);
   const { overcollateralization_ratio, decimals } = useSelector(
     state => state.aa.activeParams
   );
@@ -20,10 +19,12 @@ export const IssueStablecoinFrom = ({ params }) => {
     }
   };
   const newValue = Math.ceil(
-    (1000000000 * exchange_rate * overcollateralization_ratio * Number(count)) /
+    (1000000000 *
+      (1 / exchange_rate) *
+      overcollateralization_ratio *
+      Number(count)) /
       Math.exp(decimals * Math.log(10))
   );
-  //10^decimals = e^(decimals * ln(10))
   const handleSubmit = ev => {
     ev.preventDefault();
     redirect(
@@ -31,6 +32,7 @@ export const IssueStablecoinFrom = ({ params }) => {
         config.TESTNET ? "-tn" : ""
       }:${active}?amount=${newValue}&amp;asset=base`
     );
+    setCount("");
   };
 
   return (

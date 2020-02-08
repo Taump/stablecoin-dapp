@@ -68,11 +68,17 @@ export const UserForm = ({ onChange }) => {
       }
     });
   };
+  const handleSubmit = ev => {
+    if (ev) {
+      ev.preventDefault();
+    }
+    handleClickAdd(address.value);
+  };
   return (
     <Form>
       <Row>
         <Title level={3}>My loans</Title>
-        <Col span={19}>
+        <Col md={{ span: 16 }} xs={{ span: 24 }}>
           <Form.Item>
             <Select
               key={"5464564590"}
@@ -88,7 +94,7 @@ export const UserForm = ({ onChange }) => {
             </Select>
           </Form.Item>
         </Col>
-        <Col span={3} offset={2}>
+        <Col md={{ span: 6, offset: 2 }} xs={{ span: 24 }}>
           <Button
             size="large"
             type="primary"
@@ -117,7 +123,7 @@ export const UserForm = ({ onChange }) => {
         ]}
       >
         <Title level={3}>Add new wallet address</Title>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <Form.Item
             help={address.error.help}
             hasFeedback
