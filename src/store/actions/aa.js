@@ -55,6 +55,7 @@ const openNotificationRequest = (address, event) => {
   notification.open({
     message: address,
     description: event,
+    duration: null,
     style: { minWidth: 350 }
   });
 };

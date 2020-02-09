@@ -258,26 +258,31 @@ export const DeployForm = ({ params }) => {
   };
   const handleSummit = ev => {
     ev.preventDefault();
+    const url = `byteball${
+      config.TESTNET ? "-tn" : ""
+    }:data?app=definition&definition=${encodeURIComponent(AA)}`;
+
     dispatch(
-      pendingDeployRequest({
-        oracle: oracle.value,
-        overcollateralization_ratio: toNumericValue(
-          collateralizationRatio.value
-        ),
-        max_loan_value_in_underlying: toNumericValue(maxLoan.value),
-        decimals: toNumericValue(decimals.value),
-        auction_period: toNumericValue(auctionPeriod.value),
-        liquidation_ratio: toNumericValue(liquidationRatio.value),
-        feed_name: feedName.value,
-        ma_feed_name: maFeedName.value,
-        expiry_date: expiryDate.valid && expiryDate.value.format("YYYY-MM-DD")
-      })
+      pendingDeployRequest(
+        {
+          oracle: oracle.value,
+          overcollateralization_ratio: toNumericValue(
+            collateralizationRatio.value
+          ),
+          max_loan_value_in_underlying: toNumericValue(maxLoan.value),
+          decimals: toNumericValue(decimals.value),
+          auction_period: toNumericValue(auctionPeriod.value),
+          liquidation_ratio: toNumericValue(liquidationRatio.value),
+          feed_name: feedName.value,
+          ma_feed_name: maFeedName.value,
+          expiry_date: expiryDate.valid && expiryDate.value.format("YYYY-MM-DD")
+        },
+        url
+      )
     );
-    redirect(
-      `byteball${
-        config.TESTNET ? "-tn" : ""
-      }:data?app=definition&definition=${encodeURIComponent(AA)}`
-    );
+    // redirect(
+    //
+    // );
   };
   const AA = `{
   base_aa: '${config.BASE_AA}',

@@ -67,7 +67,7 @@
         "title": "Request for repayment of the loan by {{address}}"
       },
       "res": {
-        "title": "addCollateral RESPONSE"
+        "title": "The loan was repaid by {{address}}"
       }
     }
   },

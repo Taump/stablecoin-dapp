@@ -3,12 +3,11 @@ import { t } from "../utils";
 const createObjectResponseNotification = (data, aaVars) => {
   const address = data.aa_address;
   const upd = data.updatedStateVars;
+  const trigger_unit = data.trigger_unit;
   if (!isEmpty(data.response)) {
     const res = data.response;
     const time = data.objResponseUnit && data.objResponseUnit.timestamp;
-    const trigger_unit = data.trigger_unit;
-    console.log("RESPONSE", data);
-    if (res.responseVars) {
+    if (res.responseVars && !data.bounced) {
       const resVars = res.responseVars;
       if ("asset" in resVars) {
         return {
@@ -19,13 +18,12 @@ const createObjectResponseNotification = (data, aaVars) => {
           trigger_unit
         };
       } else if ("amount" in resVars && "id" in resVars) {
-        console.log("ISSUE COIN ERSPONSE!");
         return {
           AA: address,
           title: t("notifications.issueStablecoin.res.title", {
-            address: data.body.unit.authors["0"].address
+            address: data.objResponseUnit.authors["0"].address
           }),
-          tag: "res_asset",
+          tag: "res_stable",
           time,
           trigger_unit
         };
@@ -50,9 +48,15 @@ const createObjectResponseNotification = (data, aaVars) => {
       return undefined;
     }
   } else if (upd) {
-    const keys = Object.keys(upd);
-    const action = keys[0].split("_")[1];
-    console.log("action", action);
+    return {
+      AA: address,
+      title: t("notifications.repay.res.title", {
+        address: data.trigger_address
+      }),
+      tag: "req_repay",
+      time: data.timestamp,
+      trigger_unit
+    };
   } else {
     return undefined;
   }
@@ -118,7 +122,7 @@ const createObjectRequestNotification = (data, aaVars) => {
         title: t("notifications.issueStablecoin.req.title", {
           address: data.body.unit.authors["0"].address
         }),
-        tag: "req_asset",
+        tag: "req_stable",
         time,
         trigger_unit
       };
