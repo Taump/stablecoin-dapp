@@ -1,11 +1,16 @@
-import React, { useState } from "react";
-import { Form, Input, Button, Typography } from "antd";
+import React, { useState, useRef } from "react";
+import { Form, Input, Typography } from "antd";
 import { useSelector } from "react-redux";
-import { redirect } from "../../utils";
+
+import { t } from "../../utils";
+
 import config from "../../config";
+
 const { Title } = Typography;
+
 export const IssueStablecoinFrom = () => {
   const [count, setCount] = useState("");
+  const issueBtn = useRef(null);
   const exchange_rate = useSelector(state => state.aa.activeDataFeed);
   const { overcollateralization_ratio, decimals } = useSelector(
     state => state.aa.activeParams
@@ -27,34 +32,36 @@ export const IssueStablecoinFrom = () => {
   );
   const handleSubmit = ev => {
     ev.preventDefault();
-    redirect(
-      `byteball${
-        config.TESTNET ? "-tn" : ""
-      }:${active}?amount=${newValue}&amp;asset=base`
-    );
+    issueBtn.current.click();
     setCount("");
   };
 
+  const url = `byteball${
+    config.TESTNET ? "-tn" : ""
+  }:${active}?amount=${newValue}&amp;asset=base`;
+
   return (
     <Form onSubmit={handleSubmit}>
-      <Title level={3}>Issue stablecoins</Title>
-      <Form.Item>
+      <Title level={3}>{t("forms.issueStablecoin.title")}</Title>
+      <Form.Item hasFeedback>
         <Input
           size="large"
-          placeholder="Number of stablecoins"
+          placeholder={t("forms.issueStablecoin.fields.count.name")}
           onChange={handleChange}
           value={count}
         />
       </Form.Item>
       <Form.Item>
-        <Button
-          size="large"
-          type="primary"
-          htmlType="submit"
+        <a
+          href={url}
+          className="ant-btn ant-btn-primary ant-btn-lg"
+          ref={issueBtn}
           disabled={count === ""}
         >
-          Send {newValue} bytes
-        </Button>
+          {t("forms.issueStablecoin.submit", {
+            newValue
+          })}
+        </a>
       </Form.Item>
     </Form>
   );

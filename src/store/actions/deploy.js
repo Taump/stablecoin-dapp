@@ -1,3 +1,5 @@
+import { message } from "antd";
+
 import {
   PENDING_DEPLOY_REQUEST,
   REQUEST_DEPLOY,
@@ -6,7 +8,6 @@ import {
 } from "../types/deploy";
 import history from "../../history";
 import client from "../../socket";
-import { message } from "antd";
 import { redirect } from "../../utils";
 
 export const pendingDeployRequest = (params, url) => async (
@@ -15,7 +16,7 @@ export const pendingDeployRequest = (params, url) => async (
 ) => {
   const store = getState();
   const pending = store.deploy.pending;
-  // Проверки на доступность data_feeds
+
   let data_feed;
   let data_feed_ma;
   try {

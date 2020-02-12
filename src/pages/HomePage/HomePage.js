@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { Layout } from "../../components/Layout/Layout";
-import { Form, Row, Col, Typography, Statistic, Result } from "antd";
+import { Row, Col, Typography, Statistic, Result } from "antd";
 import { SelectAA } from "../../components/SelectAA/SelectAA";
 import { LoanListByAddress } from "../../components/LoanListByAddress/LoanListByAddress";
-import { IssueStablecoinFrom, UserForm } from "../../forms";
+import { IssueStablecoinFrom, WalletForm } from "../../forms";
 import { useSelector } from "react-redux";
 import { IssueAsset } from "../../components/IssueAsset/IssueAsset";
 import { ParamsView } from "../../components/ParamsView/ParamsView";
@@ -82,7 +82,7 @@ export const HomePage = props => {
             </Col>
           </Row>
           <Row style={{ marginBottom: 25 }}>
-            <UserForm onChange={address => setAddress(address)} />
+            <WalletForm onChange={address => setAddress(address)} />
             <Row>
               {address && (
                 <LoanListByAddress address={address} active={active} />

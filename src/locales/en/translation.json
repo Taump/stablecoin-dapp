@@ -2,21 +2,7 @@
   "test": "test page",
   "pages": {
     "home": {
-      "title": "Home",
-      "asset": {
-        "title": "Issuing Asset",
-        "status": {
-          "pending" : {
-            "title": "Issue asset",
-            "subTitle": "As soon as we receive a request to issue an asset, you will proceed to the next step",
-            "button": "Issue"
-          },
-          "success" : {
-            "title": "Autonomous agent successfully configured",
-            "button": "Go home page"
-          }
-        }
-      }
+      "title": "Home"
     },
     "deploy": {
       "title": "Create",
@@ -113,6 +99,40 @@
       },
       "submit": "Open deploy screen"
     },
+    "issueStablecoin": {
+      "title": "Issue stablecoins",
+      "fields": {
+        "count": {
+          "name": "Number of stablecoins"
+        }
+      },
+      "submit": "Send {{newValue}} bytes"
+    },
+    "wallet": {
+      "title": "My loans",
+      "fields": {
+        "selectAddress": {
+          "name": "Select wallet address"
+        }
+      },
+      "submit": "Add",
+      "modal": {
+        "title": "Add new wallet address",
+        "fields": {
+          "address": {
+            "name": "Your wallet address"
+          }
+        },
+        "submits": {
+          "add": {
+            "name": "Add"
+          },
+          "cancel": {
+            "name": "Cancel"
+          }
+        }
+      }
+    },
     "error": {
       "notValid": "{{field}} is not valid",
       "required": "This field is required",
@@ -121,6 +141,70 @@
       "maxNum": "The maximum value is {{count}}",
       "datePassed": "This date has already passed",
       "muchValue": "You entered too much value"
+    }
+  },
+  "components": {
+    "asset": {
+      "title": "Issuing Asset",
+      "status": {
+        "pending" : {
+          "title": "Issue asset",
+          "subTitle": "As soon as we receive a request to issue an asset, you will proceed to the next step",
+          "button": "Issue"
+        }
+      }
+    },
+    "loanListByAddress": {
+      "titles": {
+        "amount": "Count coins",
+        "collateral": "Collateral",
+        "actions": "Actions"
+      },
+      "actions": {
+        "collateral": "Add collateral",
+        "repayment": "Repayment"
+      },
+      "empty": "No loans"
+    },
+    "paramsView": {
+      "title": "Parameters included in the autonomous agent",
+      "params": {
+        "auctionPeriod": "Auction period (seconds)",
+        "liquidationRatio": "liquidation ratio",
+        "overCollateralizationRatio": "Over collateralization ratio",
+        "oracle": "Oracle",
+        "feedName": "Feed name",
+        "decimals": "Decimals",
+        "maFeedName": "Moving average feed name",
+        "maxLoan": "Max loan value in underlying",
+        "expiryDate": "Max loan value in underlying"
+      }
+    },
+    "selectAA": {
+      "placeholder": "Select a AA",
+      "group": {
+        "recent": "Recent AAs",
+        "other": "Other AAs",
+        "all": "All AAs"
+      }
+    }
+  },
+  "modals": {
+    "collateralAdd": {
+      "title": "Add collateral",
+      "submits": {
+        "add": {
+          "name": "Add"
+        },
+        "cancel": {
+          "name": "Cancel"
+        }
+      },
+      "fields": {
+        "count": {
+          "name": "Count byte"
+        }
+      }
     }
   }
 }

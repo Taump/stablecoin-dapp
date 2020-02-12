@@ -6,10 +6,13 @@ import {
   SUBSCRIBE_AA,
   CHANGE_ACTIVE_AA,
   ASSET_REQUEST,
-  UPDATE_INFO_ACTIVE_AA
+  UPDATE_INFO_ACTIVE_AA,
+  OPEN_NETWORK,
+  CLOSE_NETWORK
 } from "../types/aa";
 
 const initialState = {
+  network: true,
   listByBase: [],
   listByBaseLoaded: [],
   active: null,
@@ -65,6 +68,19 @@ export const aaReducer = (state = initialState, action) => {
         subscriptions: [...state.subscriptions, action.payload]
       };
     }
+    case OPEN_NETWORK: {
+      return {
+        ...state,
+        network: true
+      };
+    }
+    case CLOSE_NETWORK: {
+      return {
+        ...state,
+        network: false,
+        subscriptions: []
+      };
+    }
     case CHANGE_ACTIVE_AA: {
       return {
         ...state,
@@ -74,9 +90,6 @@ export const aaReducer = (state = initialState, action) => {
         activeCoins: action.payload.coins,
         activeDataFeed: action.payload.data_feed,
         activeDataFeedMa: action.payload.data_feed_ma,
-        // activeBalance: {
-        //   loading: false
-        // },
         activeAssetRequest: false
       };
     }

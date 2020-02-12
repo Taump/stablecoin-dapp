@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import obyte from "obyte";
 import { trim } from "lodash";
-import { Form, Input, Button, Row, Col, DatePicker, Icon, Tooltip } from "antd";
+import { Form, Input, Button, Row, Col, DatePicker } from "antd";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 
-import config from "../../config";
-
-import { redirect, toNumericValue, t } from "../../utils";
-
 import { pendingDeployRequest } from "../../store/actions/deploy";
+
+import { LabelForm } from "../../components/LabelForm/LabelForm";
+
+import config from "../../config";
+import { toNumericValue, t } from "../../utils";
+
 const initStateInput = {
   value: "",
   valid: true,
@@ -280,9 +282,6 @@ export const DeployForm = ({ params }) => {
         url
       )
     );
-    // redirect(
-    //
-    // );
   };
   const AA = `{
   base_aa: '${config.BASE_AA}',
@@ -316,7 +315,7 @@ export const DeployForm = ({ params }) => {
           hasFeedback
           validateStatus={oracle.error.status}
           help={oracle.error.help}
-          label={<LabelForm field="oracle" />}
+          label={<LabelForm field="oracle" page="deploy" tooltip={true} />}
           colon={false}
         >
           <Input
@@ -332,7 +331,13 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={collateralizationRatio.error.status}
             help={collateralizationRatio.error.help}
-            label={<LabelForm field="overCollateralizationRatio" />}
+            label={
+              <LabelForm
+                field="overCollateralizationRatio"
+                page="deploy"
+                tooltip={true}
+              />
+            }
             colon={false}
           >
             <Input
@@ -347,7 +352,13 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={liquidationRatio.error.status}
             help={liquidationRatio.error.help}
-            label={<LabelForm field="liquidationRatio" />}
+            label={
+              <LabelForm
+                field="liquidationRatio"
+                page="deploy"
+                tooltip={true}
+              />
+            }
             colon={false}
           >
             <Input
@@ -362,7 +373,9 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={auctionPeriod.error.status}
             help={auctionPeriod.error.help}
-            label={<LabelForm field="auctionPeriod" />}
+            label={
+              <LabelForm field="auctionPeriod" page="deploy" tooltip={true} />
+            }
             colon={false}
           >
             <Input
@@ -379,7 +392,7 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={feedName.error.status}
             help={feedName.error.help}
-            label={<LabelForm field="feedName" />}
+            label={<LabelForm field="feedName" page="deploy" tooltip={true} />}
             colon={false}
           >
             <Input
@@ -394,7 +407,9 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={maFeedName.error.status}
             help={maFeedName.error.help}
-            label={<LabelForm field="moFeedName" />}
+            label={
+              <LabelForm field="moFeedName" page="deploy" tooltip={true} />
+            }
             colon={false}
           >
             <Input
@@ -411,7 +426,7 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={maxLoan.error.status}
             help={maxLoan.error.help}
-            label={<LabelForm field="maxLoan" />}
+            label={<LabelForm field="maxLoan" page="deploy" tooltip={true} />}
             colon={false}
           >
             <Input
@@ -427,7 +442,7 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={decimals.error.status}
             help={decimals.error.help}
-            label={<LabelForm field="decimals" />}
+            label={<LabelForm field="decimals" page="deploy" tooltip={true} />}
             colon={false}
           >
             <Input
@@ -446,7 +461,9 @@ export const DeployForm = ({ params }) => {
             hasFeedback
             validateStatus={expiryDate.error.status}
             help={expiryDate.error.help}
-            label={<LabelForm field="expiryDate" />}
+            label={
+              <LabelForm field="expiryDate" page="deploy" tooltip={true} />
+            }
             colon={false}
           >
             <DatePicker
@@ -473,14 +490,3 @@ export const DeployForm = ({ params }) => {
     </Form>
   );
 };
-
-const LabelForm = ({ field, tooltip = true }) => (
-  <span style={{ verticalAlign: "middle" }}>
-    {tooltip && (
-      <Tooltip title={t(`forms.deploy.fields.${field}.descr`)} placement="top">
-        <Icon type="info-circle" style={{ color: "#808080" }} />
-      </Tooltip>
-    )}{" "}
-    {t(`forms.deploy.fields.${field}.name`)}:
-  </span>
-);

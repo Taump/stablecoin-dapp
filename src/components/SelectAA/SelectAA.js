@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { changeActiveAA } from "../../store/actions/aa";
-
+import { t } from "../../utils";
 import styles from "../SelectAA/SelectAA.module.css";
 
 const { Option, OptGroup } = Select;
@@ -16,17 +16,26 @@ export const SelectAA = props => {
   const listByBaseLoaded = useSelector(state => state.aa.listByBaseLoaded);
   const [scRecentAas, setScRecentAas] = useLocalStorage("scRecentAas", []);
   const recentActive = aaListByBase.length > 8;
+
   const handleSelectAA = address => {
     dispatch(changeActiveAA(address));
+    let aaListStorage = scRecentAas;
     if (recentActive) {
-      let aaListStorage = scRecentAas;
-      if (aaListStorage.find(aa => aa.address === address) === undefined) {
+      const findAaInRecent = aaListStorage.findIndex(
+        aa => aa.address === address
+      );
+      if (findAaInRecent === -1) {
         if (aaListStorage && aaListStorage.length >= 5) {
           aaListStorage.pop();
         }
         aaListStorage.unshift(aaListByBase.find(aa => aa.address === address));
-        setScRecentAas(aaListStorage);
+      } else {
+        [aaListStorage[0], aaListStorage[findAaInRecent]] = [
+          aaListStorage[findAaInRecent],
+          aaListStorage[0]
+        ];
       }
+      setScRecentAas(aaListStorage);
     }
   };
 
@@ -38,7 +47,7 @@ export const SelectAA = props => {
   return (
     <Select
       className={styles.select}
-      placeholder="Select a AA"
+      placeholder={t("components.selectAA.placeholder")}
       onChange={handleSelectAA}
       value={aaActive || 0}
       size="large"
@@ -53,10 +62,10 @@ export const SelectAA = props => {
       {...props}
     >
       <Option key={"AA0"} value={0} disabled>
-        Select a AA
+        {t("components.selectAA.placeholder")}
       </Option>
       {recentActive && scRecentAas.length >= 1 && (
-        <OptGroup label="Recent AAs">
+        <OptGroup label={t("components.selectAA.group.recent")}>
           {scRecentAas &&
             scRecentAas.map((aa, i) => {
               return (
@@ -73,7 +82,10 @@ export const SelectAA = props => {
       )}
       <OptGroup
         label={
-          (recentActive && scRecentAas.length >= 1 && "Other AAs") || "All AAs"
+          (recentActive &&
+            scRecentAas.length >= 1 &&
+            t("components.selectAA.group.other")) ||
+          t("components.selectAA.group.all")
         }
       >
         {notRecentAaListByBase.map((aa, i) => {

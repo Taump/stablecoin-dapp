@@ -1,17 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Button, Select, Row, Col, Modal, Typography } from "antd";
+import obyte from "obyte";
+
 import { t } from "../../utils";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
-import obyte from "obyte";
+
 const { Option } = Select;
 const { Title } = Typography;
 
-export const UserForm = ({ onChange }) => {
+export const WalletForm = ({ onChange }) => {
   const [scWallets, setScWallets] = useLocalStorage("scWallets", []);
+  const [scWalletsActive, setScWalletsActive] = useLocalStorage(
+    "scWalletsActive",
+    undefined
+  );
+  const [walletsActive, setWalletsActive] = useState(scWalletsActive);
   const [modalVisible, setModalVisible] = useState(false);
   const [address, setAddress] = useState({
     value: "",
-    valid: true,
+    valid: false,
     error: {
       status: "",
       help: ""
@@ -53,10 +60,12 @@ export const UserForm = ({ onChange }) => {
   const handleClickAdd = address => {
     setModalVisible(false);
 
-    if (scWallets.find(wallet => wallet === address) === undefined) {
+    if (address && scWallets.find(wallet => wallet === address) === undefined) {
       const wallets = scWallets.slice();
       wallets.unshift(address);
       setScWallets(wallets);
+      setWalletsActive(address);
+      setScWalletsActive(address);
     }
 
     setAddress({
@@ -68,23 +77,33 @@ export const UserForm = ({ onChange }) => {
       }
     });
   };
+
   const handleSubmit = ev => {
     if (ev) {
       ev.preventDefault();
     }
     handleClickAdd(address.value);
   };
+
+  useEffect(() => {
+    onChange(scWalletsActive);
+  }, [onChange, scWalletsActive]);
+
   return (
     <Form>
       <Row>
-        <Title level={3}>My loans</Title>
+        <Title level={3}>{t("forms.wallet.title")}</Title>
         <Col md={{ span: 16 }} xs={{ span: 24 }}>
           <Form.Item>
             <Select
               key={"5464564590"}
               size="large"
-              placeholder="Select wallet address"
-              onChange={onChange}
+              placeholder={t("forms.wallet.fields.selectAddress.name")}
+              onChange={address => {
+                setScWalletsActive(address);
+                setWalletsActive(address);
+              }}
+              value={walletsActive}
             >
               {scWallets.map((arr, i) => (
                 <Option key={`${arr}${i}`} value={arr}>
@@ -101,7 +120,7 @@ export const UserForm = ({ onChange }) => {
             onClick={() => setModalVisible(true)}
             icon="plus"
           >
-            Add
+            {t("forms.wallet.submit")}
           </Button>
         </Col>
       </Row>
@@ -110,7 +129,7 @@ export const UserForm = ({ onChange }) => {
         onCancel={() => setModalVisible(false)}
         footer={[
           <Button key="cancel" onClick={() => setModalVisible(false)}>
-            Cancel
+            {t("forms.wallet.modal.submits.cancel.name")}
           </Button>,
           <Button
             key="add"
@@ -118,11 +137,11 @@ export const UserForm = ({ onChange }) => {
             onClick={() => handleClickAdd(address.value)}
             disabled={!address.valid}
           >
-            Add
+            {t("forms.wallet.modal.submits.add.name")}
           </Button>
         ]}
       >
-        <Title level={3}>Add new wallet address</Title>
+        <Title level={3}>{t("forms.wallet.modal.title")}</Title>
         <Form onSubmit={handleSubmit}>
           <Form.Item
             help={address.error.help}
@@ -130,7 +149,7 @@ export const UserForm = ({ onChange }) => {
             validateStatus={address.error.status}
           >
             <Input
-              placeholder="Your wallet address"
+              placeholder={t("forms.wallet.modal.fields.address.name")}
               size="large"
               value={address.value}
               onChange={handleChangeAddress}
