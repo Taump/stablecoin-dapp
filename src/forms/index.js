@@ -1,3 +1,3 @@
 export { DeployForm } from "./DeployForm/DeployForm";
-export { IssueStablecoinFrom } from "./IssueStablecoinFrom/IssueStablecoinFrom";
+export { IssueStablecoinForm } from "./IssueStablecoinForm/IssueStablecoinForm";
 export { WalletForm } from "./WalletForm/WalletForm";

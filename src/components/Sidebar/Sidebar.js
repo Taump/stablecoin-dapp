@@ -16,6 +16,12 @@ export const Sidebar = ({ active }) => {
       path: "/"
     },
     {
+      key: "auction",
+      icon: "profile",
+      title: t("pages.auction.title"),
+      path: "/auction"
+    },
+    {
       key: "deploy",
       icon: "plus-circle",
       title: t("pages.deploy.title"),

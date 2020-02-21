@@ -11,6 +11,7 @@ import { ADD_AA_TO_LIST, ASSET_REQUEST } from "../../types/aa";
 import { deployRequest, pendingDeployResponse } from "../deploy";
 import { ADD_AA_NOTIFICATION } from "../../types/notifications";
 import { changeActiveAA } from "./index";
+import { addBidForCoinAuction } from "../auction";
 
 const openNotificationRequest = (address, event) => {
   notification.open({
@@ -119,6 +120,14 @@ export const watchRequestAas = () => (dispatch, getState) => {
               dispatch({
                 type: ASSET_REQUEST
               });
+            } else if (
+              aaActive === notificationObject.AA &&
+              notificationObject.tag === "req_seize"
+            ) {
+              const meta = notificationObject.meta;
+              dispatch(
+                addBidForCoinAuction(meta.id, meta.newBid, meta.timestamp)
+              );
             }
           }
         }
@@ -142,6 +151,15 @@ export const watchRequestAas = () => (dispatch, getState) => {
               type: ADD_AA_NOTIFICATION,
               payload: notificationObject
             });
+            if (
+              aaActive === notificationObject.AA &&
+              notificationObject.tag === "res_seize"
+            ) {
+              const meta = notificationObject.meta;
+              dispatch(
+                addBidForCoinAuction(meta.id, meta.newBid, meta.timestamp)
+              );
+            }
           }
         }
       }

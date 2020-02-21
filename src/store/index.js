@@ -3,10 +3,12 @@ import thunk from "redux-thunk";
 import { aaReducer } from "./reducers/aa";
 import { deployReducer } from "./reducers/deploy";
 import { notificationsReducer } from "./reducers/notifications";
+import { auctionReducer } from "./reducers/auction";
 const rootReducer = combineReducers({
   aa: aaReducer,
   deploy: deployReducer,
-  notifications: notificationsReducer
+  notifications: notificationsReducer,
+  auction: auctionReducer
 });
 
 export default createStore(

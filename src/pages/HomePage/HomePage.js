@@ -5,10 +5,11 @@ import { Layout } from "../../components/Layout/Layout";
 import { Row, Col, Typography, Statistic, Result } from "antd";
 import { SelectAA } from "../../components/SelectAA/SelectAA";
 import { LoanListByAddress } from "../../components/LoanListByAddress/LoanListByAddress";
-import { IssueStablecoinFrom, WalletForm } from "../../forms";
+import { IssueStablecoinForm, WalletForm } from "../../forms";
 import { useSelector } from "react-redux";
 import { IssueAsset } from "../../components/IssueAsset/IssueAsset";
 import { ParamsView } from "../../components/ParamsView/ParamsView";
+import { ExpiredForm } from "../../forms/ExpiredForm/ExpiredForm";
 
 const { Title } = Typography;
 const { Countdown } = Statistic;
@@ -21,6 +22,7 @@ export const HomePage = props => {
   const activeDataFeedMa = useSelector(state => state.aa.activeDataFeedMa);
   const activeDataFeed = useSelector(state => state.aa.activeDataFeed);
   const activeAssetRequest = useSelector(state => state.aa.activeAssetRequest);
+  const isExpired = useSelector(state => state.aa.isExpired);
   const [address, setAddress] = useState("");
   const finish = () => {};
   let screen = "";
@@ -51,16 +53,16 @@ export const HomePage = props => {
         <>
           <Row style={{ marginBottom: 25 }}>
             <Col xs={{ span: 24 }} md={{ span: 8 }}>
-              <IssueStablecoinFrom />
+              {isExpired ? <ExpiredForm /> : <IssueStablecoinForm />}
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 14, offset: 2 }}>
-              <Title level={3}>Statistics</Title>
+              <Title level={3}>{t("pages.home.statistic.title")}</Title>
               <Row type="flex">
                 {activeParams && activeParams.expiry_date && (
                   <Col>
                     <div style={{ textAlign: "center", marginRight: 15 }}>
                       <Countdown
-                        title="Days to expiration"
+                        title={t("pages.home.statistic.expiration")}
                         format={"DD"}
                         value={moment(activeParams.expiry_date)}
                         onFinish={finish}
@@ -72,7 +74,7 @@ export const HomePage = props => {
                   <Col>
                     <div style={{ textAlign: "center" }}>
                       <Statistic
-                        title="Total coins"
+                        title={t("pages.home.statistic.total")}
                         value={activeInfo.circulating_supply}
                       />
                     </div>

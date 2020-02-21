@@ -16,41 +16,35 @@ export const LoanListByAddress = ({ address }) => {
   const walletsInfo = useSelector(state => state.aa.activeCoins);
   const active = useSelector(state => state.aa.active);
   const activeInfo = useSelector(state => state.aa.activeInfo);
-  const activeParams = useSelector(state => state.aa.activeParams);
-  const activeDataFeedMa = useSelector(state => state.aa.activeDataFeedMa);
 
   const [idCollateral, setIdCollateral] = useState(null);
 
   let list = [];
   for (const fields in walletsInfo) {
     const isRepaid = "repaid" in walletsInfo[fields];
-    if (walletsInfo[fields].owner === address && !isRepaid) {
+    if (
+      walletsInfo[fields].owner === address &&
+      !isRepaid &&
+      Number(walletsInfo[fields].amount) !== 0
+    ) {
       list.push({
         id: fields,
         collateral: walletsInfo[fields].collateral,
-        amount: walletsInfo[fields].amount
+        amount: walletsInfo[fields].amount,
+        percent: walletsInfo[fields].percent,
+        atAuction: walletsInfo[fields].atAuction
       });
     }
   }
   let LoanList;
-  const exchange_rate = activeInfo.expired
-    ? activeInfo.expiry_exchange_rate
-    : activeDataFeedMa;
-
   const loanListInfo = list.map(el => {
-    const min_collateral = (el.amount / 100 / exchange_rate) * 1000000000;
-    const min_collateral_liquidation = Math.ceil(
-      min_collateral * activeParams.liquidation_ratio
-    );
-    const amountPercent = Math.ceil((el.collateral / min_collateral) * 100);
-    const disabledRepayment = el.collateral < min_collateral_liquidation;
     return {
       amount: el.amount,
       id: el.id,
       collateral: el.collateral,
-      disabledRepayment,
-      percent: amountPercent,
-      color: disabledRepayment ? "red" : "green"
+      disabledRepayment: el.atAuction,
+      percent: el.percent,
+      color: el.atAuction ? "red" : "green"
     };
   });
 

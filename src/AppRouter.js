@@ -1,7 +1,7 @@
 import React from "react";
 import { Router, Route } from "react-router-dom";
 
-import { HomePage, DeployPage } from "./pages";
+import { HomePage, DeployPage, AuctionPage } from "./pages";
 
 import history from "./history";
 
@@ -13,6 +13,9 @@ const AppRouter = () => {
       </Route>
       <Route exact path="/deploy">
         <DeployPage />
+      </Route>
+      <Route exact path="/auction">
+        <AuctionPage />
       </Route>
     </Router>
   );

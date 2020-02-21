@@ -8,7 +8,7 @@ import config from "../../config";
 
 const { Title } = Typography;
 
-export const IssueStablecoinFrom = () => {
+export const IssueStablecoinForm = () => {
   const [count, setCount] = useState("");
   const issueBtn = useRef(null);
   const exchange_rate = useSelector(state => state.aa.activeDataFeed);

@@ -23,7 +23,8 @@ const initialState = {
   activeDataFeed: null,
   activeDataFeedMa: null,
   subscribeBase: false,
-  subscriptions: []
+  subscriptions: [],
+  isExpired: false
 };
 
 export const aaReducer = (state = initialState, action) => {
@@ -90,7 +91,8 @@ export const aaReducer = (state = initialState, action) => {
         activeCoins: action.payload.coins,
         activeDataFeed: action.payload.data_feed,
         activeDataFeedMa: action.payload.data_feed_ma,
-        activeAssetRequest: false
+        activeAssetRequest: false,
+        isExpired: action.payload.isExpired
       };
     }
     case UPDATE_INFO_ACTIVE_AA: {

@@ -2,7 +2,12 @@
   "test": "test page",
   "pages": {
     "home": {
-      "title": "Home"
+      "title": "Home",
+      "statistic": {
+        "title": "Statistics",
+        "total": "Total coins",
+        "expiration": "Days to expiration"
+      }
     },
     "deploy": {
       "title": "Create",
@@ -11,6 +16,20 @@
         "subTitle": "After that, you will be redirected to the asset issue page",
         "button": "Cancel"
       }
+    },
+    "auction": {
+      "title": "Auction",
+      "fields": {
+        "time": "Time until auction ends",
+        "min": "Minimum bid",
+        "total": "Total winner bid",
+        "profit": "Expected profit"
+      },
+      "actions": {
+        "end": "End auction",
+        "bid": "Place a bid"
+      },
+      "empty": "No lots at auction"
     }
   },
   "notifications": {
@@ -22,6 +41,30 @@
       "res": {
         "title": "AA was successfully deployed",
         "subTitle": "Its address is {{address}}"
+      }
+    },
+    "seize": {
+      "req": {
+        "title": "Request a new bid at the auction"
+      },
+      "res": {
+        "title": "New auction bid"
+      }
+    },
+    "end_auction": {
+      "req": {
+        "title": "Auction End Request"
+      },
+      "res": {
+        "title": "Auction finished"
+      }
+    },
+    "expire": {
+      "req": {
+        "title": "Request recording rate at expiration date"
+      },
+      "res": {
+        "title": "Rate at the expiration date was recorded"
       }
     },
     "asset": {
@@ -133,6 +176,12 @@
         }
       }
     },
+    "expired": {
+      "title_rate": "Exchange rate on expiry date",
+      "title_send_expiry": "Record the exchange rate",
+      "description": "After the expiration date, you need to send a request to record the current rate",
+      "submit": "Send"
+    },
     "error": {
       "notValid": "{{field}} is not valid",
       "required": "This field is required",
@@ -195,6 +244,22 @@
       "submits": {
         "add": {
           "name": "Add"
+        },
+        "cancel": {
+          "name": "Cancel"
+        }
+      },
+      "fields": {
+        "count": {
+          "name": "Count byte"
+        }
+      }
+    },
+    "placeBid": {
+      "title": "Place a bid",
+      "submits": {
+        "place": {
+          "name": "Place a bid"
         },
         "cancel": {
           "name": "Cancel"
