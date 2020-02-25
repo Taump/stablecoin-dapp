@@ -12,7 +12,7 @@ export const IssueStablecoinForm = () => {
   const [count, setCount] = useState("");
   const issueBtn = useRef(null);
   const exchange_rate = useSelector(state => state.aa.activeDataFeed);
-  const { overcollateralization_ratio, decimals } = useSelector(
+  const { overcollateralization_ratio } = useSelector(
     state => state.aa.activeParams
   );
   const active = useSelector(state => state.aa.active);
@@ -23,12 +23,16 @@ export const IssueStablecoinForm = () => {
       setCount(String(getCount));
     }
   };
+  const amount = Number(count);
+  // const newValue = Math.ceil(
+  //   (1000000000 *
+  //     (1 / exchange_rate) *
+  //     overcollateralization_ratio *
+  //     Number(count)) /
+  //     Math.exp(decimals * Math.log(10))
+  // );
   const newValue = Math.ceil(
-    (1000000000 *
-      (1 / exchange_rate) *
-      overcollateralization_ratio *
-      Number(count)) /
-      Math.exp(decimals * Math.log(10))
+    (1e9 / exchange_rate) * overcollateralization_ratio * amount
   );
   const handleSubmit = ev => {
     ev.preventDefault();

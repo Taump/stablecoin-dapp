@@ -16,11 +16,22 @@ export const LoanListByAddress = ({ address }) => {
   const walletsInfo = useSelector(state => state.aa.activeCoins);
   const active = useSelector(state => state.aa.active);
   const activeInfo = useSelector(state => state.aa.activeInfo);
+  const exchange_rate = useSelector(state => state.aa.activeDataFeedMa);
+  const activeParams = useSelector(state => state.aa.activeParams);
 
   const [idCollateral, setIdCollateral] = useState(null);
 
   let list = [];
   for (const fields in walletsInfo) {
+    const min_collateral =
+      (walletsInfo[fields].amount /
+        Math.pow(10, activeParams.decimals) /
+        exchange_rate) *
+      1000000000;
+    const percent = Math.ceil(
+      (walletsInfo[fields].collateral / min_collateral) * 100
+    );
+
     const isRepaid = "repaid" in walletsInfo[fields];
     if (
       walletsInfo[fields].owner === address &&
@@ -31,7 +42,7 @@ export const LoanListByAddress = ({ address }) => {
         id: fields,
         collateral: walletsInfo[fields].collateral,
         amount: walletsInfo[fields].amount,
-        percent: walletsInfo[fields].percent,
+        percent: percent,
         atAuction: walletsInfo[fields].atAuction
       });
     }

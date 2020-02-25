@@ -75,7 +75,10 @@ export const HomePage = props => {
                     <div style={{ textAlign: "center" }}>
                       <Statistic
                         title={t("pages.home.statistic.total")}
-                        value={activeInfo.circulating_supply}
+                        value={
+                          activeInfo.circulating_supply /
+                          10 ** activeParams.decimals
+                        }
                       />
                     </div>
                   </Col>

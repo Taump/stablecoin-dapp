@@ -80,7 +80,7 @@
         "title": "Request for issue stablecoin by {{address}}"
       },
       "res": {
-        "title": "{{count}} stablecoins were issued"
+        "title": "{{count}} stablecoins were issued by {{address}}"
       }
     },
     "addCollateral" : {

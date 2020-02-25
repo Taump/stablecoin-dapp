@@ -96,13 +96,13 @@ export const changeActiveAA = address => async (dispatch, getState) => {
             const min_collateral_liquidation = Math.round(
               min_collateral * store.aa.activeParams.liquidation_ratio
             );
-            const percent = Math.ceil(
-              (coins[id].collateral / min_collateral) * 100
-            );
+            // const percent = Math.ceil(
+            //   (coins[id].collateral / min_collateral) * 100
+            // );
 
             coins[id].atAuction =
               coins[id].collateral < min_collateral_liquidation;
-            coins[id].percent = percent;
+            // coins[id].percent = percent;
             if (coins[id].collateral < min_collateral_liquidation) {
               const DateNow = moment().unix();
               // const isEnded = moment(DateNow).isSameOrBefore(

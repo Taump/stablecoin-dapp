@@ -11,13 +11,21 @@ import { ADD_AA_TO_LIST, ASSET_REQUEST } from "../../types/aa";
 import { deployRequest, pendingDeployResponse } from "../deploy";
 import { ADD_AA_NOTIFICATION } from "../../types/notifications";
 import { changeActiveAA } from "./index";
-import { addBidForCoinAuction } from "../auction";
+import {
+  addBidForCoinAuction,
+  endAuctionRequest,
+  endAuctionResponse
+} from "../auction";
+import { addCollateral } from "./addCollateral";
+import { repayLoan } from "./repayLoan";
+import { expiryExchangeRate } from "./expiryExchangeRate";
+import { issueStableCoin } from "./issueStableCoin";
 
 const openNotificationRequest = (address, event) => {
   notification.open({
     message: address,
     description: event,
-    // duration: null,
+    duration: null,
     style: { minWidth: 350 }
   });
 };
@@ -126,8 +134,25 @@ export const watchRequestAas = () => (dispatch, getState) => {
             ) {
               const meta = notificationObject.meta;
               dispatch(
-                addBidForCoinAuction(meta.id, meta.newBid, meta.timestamp)
+                addBidForCoinAuction(
+                  meta.id,
+                  meta.newBid,
+                  meta.timestamp,
+                  false
+                )
               );
+            } else if (
+              aaActive === notificationObject.AA &&
+              notificationObject.tag === "req_repay"
+            ) {
+              const meta = notificationObject.meta;
+              dispatch(repayLoan(meta.id, meta.address));
+            } else if (
+              aaActive === notificationObject.AA &&
+              notificationObject.tag === "req_end"
+            ) {
+              const meta = notificationObject.meta;
+              dispatch(endAuctionRequest(meta.id));
             }
           }
         }
@@ -135,9 +160,11 @@ export const watchRequestAas = () => (dispatch, getState) => {
         const AA = result[1].body.aa_address;
         const aaVars = await client.api.getAaStateVars({ address: AA });
         if (result[1].body && result[1].body.response) {
+          const decimals = store.aa.activeParams.decimals;
           const notificationObject = createObjectNotification.res(
             result[1].body,
-            aaVars
+            aaVars,
+            decimals
           );
           if (
             (notificationObject && notificationObject.AA === aaActive) ||
@@ -157,8 +184,51 @@ export const watchRequestAas = () => (dispatch, getState) => {
             ) {
               const meta = notificationObject.meta;
               dispatch(
-                addBidForCoinAuction(meta.id, meta.newBid, meta.timestamp)
+                addBidForCoinAuction(meta.id, meta.newBid, meta.timestamp, true)
               );
+            } else if (
+              aaActive === notificationObject.AA &&
+              notificationObject.tag === "res_collateral"
+            ) {
+              const meta = notificationObject.meta;
+              dispatch(addCollateral(meta.id, meta.collateral));
+            } else if (
+              aaActive === notificationObject.AA &&
+              notificationObject.tag === "res_repay"
+            ) {
+              const meta = notificationObject.meta;
+              dispatch(repayLoan(meta.id, meta.address));
+            } else if (
+              aaActive === notificationObject.AA &&
+              notificationObject.tag === "res_expire"
+            ) {
+              const meta = notificationObject.meta;
+              dispatch(expiryExchangeRate(meta.rate));
+            } else if (
+              aaActive === notificationObject.AA &&
+              notificationObject.tag === "res_stable"
+            ) {
+              const meta = notificationObject.meta;
+              dispatch(
+                issueStableCoin({
+                  id: meta.id,
+                  owner: meta.owner,
+                  collateral: meta.collateral,
+                  amount: meta.amount
+                })
+              );
+            } else if (
+              aaActive === notificationObject.AA &&
+              notificationObject.tag === "res_au_end"
+            ) {
+              const meta = notificationObject.meta;
+              if ("owner" in meta && "collateral" in meta && "id" in meta) {
+                dispatch(
+                  endAuctionResponse(meta.id, meta.owner, meta.collateral)
+                );
+              } else {
+                dispatch(endAuctionRequest(meta.id));
+              }
             }
           }
         }

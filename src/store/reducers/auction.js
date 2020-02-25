@@ -1,10 +1,13 @@
 import {
   ADD_BID_COIN_AUCTION,
   ADD_FOR_AUCTION,
+  END_AUCTION_REQUEST,
+  END_AUCTION_RESPONSE,
   END_COIN_AUCTION,
   INIT_AUCTION,
   REMOVE_FOR_AUCTION
 } from "../types/auction";
+import { ADD_STABLE_COIN_TO_AUCTION } from "../types/aa";
 
 const initialState = {
   coins: {}
@@ -51,6 +54,38 @@ export const auctionReducer = (state = initialState, action) => {
         coins: {
           ...state.coins,
           [action.payload]: { ...state.coins[action.payload], status: "end" }
+        }
+      };
+    }
+    case END_AUCTION_REQUEST: {
+      const newCoins = Object.assign({}, state.coins);
+      delete newCoins[action.payload.id];
+      return {
+        ...state,
+        coins: newCoins
+      };
+    }
+    case END_AUCTION_RESPONSE: {
+      const newCoins = Object.assign({}, state.coins);
+      delete newCoins[action.payload.id];
+      return {
+        ...state,
+        coins: newCoins
+      };
+    }
+    case ADD_STABLE_COIN_TO_AUCTION: {
+      return {
+        ...state,
+        coins: {
+          ...state.coins,
+          [action.payload.id]: {
+            amount: action.payload.amount,
+            collateral: action.payload.collateral,
+            owner: action.payload.owner,
+            opening_collateral: action.payload.opening_collateral,
+            atAuction: action.payload.atAuction,
+            status: "open"
+          }
         }
       };
     }

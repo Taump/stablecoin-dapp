@@ -1,8 +1,7 @@
 import { isEmpty } from "lodash";
 import { t } from "../utils";
-const createObjectResponseNotification = (data, aaVars) => {
+const createObjectResponseNotification = (data, aaVars, decimals) => {
   const address = data.aa_address;
-  const upd = data.updatedStateVars;
   const trigger_unit = data.trigger_unit;
   if (!isEmpty(data.response)) {
     const res = data.response;
@@ -17,23 +16,34 @@ const createObjectResponseNotification = (data, aaVars) => {
           time,
           trigger_unit
         };
-      } else if ("amount" in resVars && "id" in resVars) {
+      } else if ("amount" in resVars && "id" in resVars && "owner" in resVars) {
         return {
           AA: address,
           title: t("notifications.issueStablecoin.res.title", {
-            address: data.objResponseUnit.authors["0"].address
+            address: resVars.owner,
+            count: resVars.amount / 10 ** decimals
           }),
           tag: "res_stable",
           time,
-          trigger_unit
+          trigger_unit,
+          meta: {
+            id: resVars.id,
+            amount: resVars.amount,
+            owner: resVars.owner,
+            collateral: resVars.collateral
+          }
         };
-      } else if ("collateral" in resVars) {
+      } else if ("collateral" in resVars && "id" in resVars) {
         return {
           AA: address,
           title: t("notifications.addCollateral.res.title"),
           tag: "res_collateral",
           time,
-          trigger_unit
+          trigger_unit,
+          meta: {
+            id: resVars.id,
+            collateral: resVars.collateral
+          }
         };
       } else if ("new_bid" in resVars && "id" in resVars) {
         return {
@@ -48,13 +58,25 @@ const createObjectResponseNotification = (data, aaVars) => {
             timestamp: resVars.auction_end_ts
           }
         };
-      } else if ("new_owner" in resVars && "new_collateral" in resVars) {
+      } else if (
+        ("new_owner" in resVars && "new_collateral" in resVars) ||
+        "end_auction" in resVars
+      ) {
+        const meta =
+          "end_auction" in resVars
+            ? { id: resVars.id }
+            : {
+                owner: resVars.new_owner,
+                collateral: resVars.new_collateral,
+                id: resVars.id
+              };
         return {
           AA: address,
           title: t("notifications.end_auction.res.title"),
           tag: "res_au_end",
           time,
-          trigger_unit
+          trigger_unit,
+          meta
         };
       } else if ("expiry_exchange_rate" in resVars) {
         return {
@@ -62,7 +84,22 @@ const createObjectResponseNotification = (data, aaVars) => {
           title: t("notifications.expire.res.title"),
           tag: "res_expire",
           time,
-          trigger_unit
+          trigger_unit,
+          meta: { rate: resVars.expiry_exchange_rate }
+        };
+      } else if ("repay_id" in resVars) {
+        return {
+          AA: address,
+          title: t("notifications.repay.res.title", {
+            address: data.trigger_address
+          }),
+          tag: "res_repay",
+          time: data.timestamp,
+          trigger_unit,
+          meta: {
+            address: data.trigger_address,
+            id: resVars.repay_id
+          }
         };
       }
     } else if ("error" in res) {
@@ -76,16 +113,6 @@ const createObjectResponseNotification = (data, aaVars) => {
     } else {
       return undefined;
     }
-  } else if (upd) {
-    return {
-      AA: address,
-      title: t("notifications.repay.res.title", {
-        address: data.trigger_address
-      }),
-      tag: "req_repay",
-      time: data.timestamp,
-      trigger_unit
-    };
   } else {
     return undefined;
   }
@@ -113,6 +140,7 @@ const createObjectRequestNotification = (data, aaVars) => {
         trigger_unit
       };
     } else if ("repay" in payload) {
+      console.log(data.body);
       return {
         AA,
         title: t("notifications.repay.req.title", {
@@ -120,7 +148,8 @@ const createObjectRequestNotification = (data, aaVars) => {
         }),
         tag: "req_repay",
         time,
-        trigger_unit
+        trigger_unit,
+        meta: { id: payload.id, address: data.body.unit.authors["0"].address }
       };
     } else if ("add_collateral" in payload) {
       return {
@@ -155,7 +184,10 @@ const createObjectRequestNotification = (data, aaVars) => {
         title: t("notifications.end_auction.req.title"),
         tag: "req_end",
         time,
-        trigger_unit
+        trigger_unit,
+        meta: {
+          id: payload.id
+        }
       };
     } else if ("expire" in payload) {
       return {

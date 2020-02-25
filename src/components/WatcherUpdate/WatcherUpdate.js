@@ -4,7 +4,6 @@ import { Result } from "antd";
 
 import {
   changeActiveAA,
-  updateInfoActiveAA,
   watchRequestAas,
   getAasByBase,
   subscribeBaseAA,
@@ -28,17 +27,17 @@ export const WatcherUpdate = props => {
     }
   }, [dispatch, aaActive]);
 
-  useEffect(() => {
-    if (aaActive && network) {
-      const update = setInterval(
-        () => dispatch(updateInfoActiveAA(aaActive)),
-        10000
-      );
-      return () => {
-        clearInterval(update);
-      };
-    }
-  }, [aaActive, dispatch, network]);
+  // useEffect(() => {
+  //   if (aaActive && network) {
+  //     const update = setInterval(
+  //       () => dispatch(updateInfoActiveAA(aaActive)),
+  //       10000
+  //     );
+  //     return () => {
+  //       clearInterval(update);
+  //     };
+  //   }
+  // }, [aaActive, dispatch, network]);
 
   useEffect(() => {
     dispatch(watchRequestAas());

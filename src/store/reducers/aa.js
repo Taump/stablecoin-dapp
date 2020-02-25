@@ -8,8 +8,13 @@ import {
   ASSET_REQUEST,
   UPDATE_INFO_ACTIVE_AA,
   OPEN_NETWORK,
-  CLOSE_NETWORK
+  CLOSE_NETWORK,
+  ADD_COLLATERAL,
+  LOAN_REPAY,
+  EXPIRY_RATE,
+  ISSUE_STABLE_COIN
 } from "../types/aa";
+import { END_AUCTION_RESPONSE } from "../types/auction";
 
 const initialState = {
   network: true,
@@ -102,6 +107,93 @@ export const aaReducer = (state = initialState, action) => {
         activeCoins: action.payload.coins,
         activeDataFeed: action.payload.data_feed,
         activeDataFeedMa: action.payload.data_feed_ma
+      };
+    }
+    case ADD_COLLATERAL: {
+      return {
+        ...state,
+        activeCoins: {
+          ...state.activeCoins,
+          [action.payload.id]: {
+            ...state.activeCoins[action.payload.id],
+            collateral: action.payload.collateral,
+            atAuction: action.payload.atAuction
+          }
+        },
+        activeInfo: {
+          ...state.activeInfo,
+          [action.payload.id + "_collateral"]: String(action.payload.collateral)
+        }
+      };
+    }
+    case LOAN_REPAY: {
+      return {
+        ...state,
+        activeCoins: {
+          ...state.activeCoins,
+          [action.payload.id]: {
+            ...state.activeCoins[action.payload.id],
+            repaid: 1
+          }
+        },
+        activeInfo: {
+          ...state.activeInfo,
+          [action.payload.id + "_repaid"]: 1
+        }
+      };
+    }
+    case EXPIRY_RATE: {
+      return {
+        ...state,
+        activeInfo: {
+          ...state.activeInfo,
+          expiry_exchange_rate: action.payload.rate
+        },
+        activeCoins: {
+          ...state.activeCoins,
+          expiry: {
+            exchange_rate: action.payload.rate
+          }
+        }
+      };
+    }
+    case ISSUE_STABLE_COIN: {
+      return {
+        ...state,
+        activeInfo: {
+          ...state.activeInfo,
+          [action.payload.id + "_amount"]: action.payload.amount,
+          [action.payload.id + "_owner"]: action.payload.owner,
+          [action.payload.id + "_collateral"]: action.payload.collateral
+        },
+        activeCoins: {
+          ...state.activeCoins,
+          [action.payload.id]: {
+            amount: action.payload.amount,
+            owner: action.payload.owner,
+            collateral: action.payload.collateral,
+            atAuction: action.payload.atAuction
+          }
+        }
+      };
+    }
+    case END_AUCTION_RESPONSE: {
+      return {
+        ...state,
+        activeCoins: {
+          ...state.activeCoins,
+          [action.payload.id]: {
+            ...state.activeCoins[action.payload.id],
+            owner: action.payload.owner,
+            collateral: action.payload.collateral,
+            atAuction: false
+          }
+        },
+        activeInfo: {
+          ...state.activeInfo,
+          [action.payload.id + "_owner"]: action.payload.owner,
+          [action.payload.id + "_collateral"]: action.payload.collateral
+        }
       };
     }
     default:
