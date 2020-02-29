@@ -28,8 +28,8 @@ export const LoanMobView = ({
         {amount / 10 ** activeParams.decimals}
       </Row>
       <Row>
-        {t("components.loanListByAddress.titles.collateral")}: {collateral} (
-        {percent}%)
+        {t("components.loanListByAddress.titles.collateral")}:{" "}
+        {collateral / 10 ** 9} ({percent}%)
       </Row>
       <Row style={{ marginTop: 10 }}>
         <Button

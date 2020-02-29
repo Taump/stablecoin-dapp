@@ -63,7 +63,7 @@ export const IssueStablecoinForm = () => {
           disabled={count === ""}
         >
           {t("forms.issueStablecoin.submit", {
-            newValue
+            newValue: newValue / 10 ** 9
           })}
         </a>
       </Form.Item>

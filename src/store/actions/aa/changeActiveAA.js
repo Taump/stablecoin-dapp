@@ -84,6 +84,7 @@ export const changeActiveAA = address => async (dispatch, getState) => {
           if (
             !("expired" in coins[id]) &&
             "amount" in coins[id] &&
+            !("repaid" in coins[id]) &&
             "collateral" in coins[id] &&
             Number(coins[id].amount) !== 0
           ) {

@@ -15,12 +15,9 @@ import { useWindowSize } from "../../hooks/useWindowSize";
 import i18n from "../../i18n";
 const { Countdown } = Statistic;
 
-const byteToGb = byte => {
-  if (byte >= 500000000) {
-    return [(byte / 1000000000).toFixed(3), "GB"];
-  } else {
-    return [Math.ceil(byte), "BYTE"];
-  }
+const byteToGb = bytes => {
+  const byte = Number(bytes);
+  return Number(byte / 10 ** 9);
 };
 
 export const AuctionPage = props => {
@@ -28,12 +25,13 @@ export const AuctionPage = props => {
   const coins = useSelector(state => state.auction.coins);
   const active = useSelector(state => state.aa.active);
   const [activeBidInfo, setActiveBidInfo] = useState(null);
+  const [width] = useWindowSize();
+  const dispatch = useDispatch();
   const coinsAtAuction = [];
+
   for (let id in coins) {
     coinsAtAuction.push({ id, ...coins[id] });
   }
-  const [width] = useWindowSize();
-  const dispatch = useDispatch();
   return (
     <Layout title={t("pages.auction.title")} page="auction">
       <Row style={{ marginBottom: 25 }}>
@@ -60,9 +58,9 @@ export const AuctionPage = props => {
           ? Math.min(opening_collateral, collateral + winner_bid) -
             (winner_bid + winner_bid * 0.01)
           : Math.min(opening_collateral, collateral + min_bid) - min_bid;
-        const [profitValue, profitType] = byteToGb(profit);
-        const [winner_bidValue, winner_bidType] = byteToGb(winner_bid);
-        const [min_bidValue, min_bidType] = byteToGb(min_bid);
+        const profitValue = byteToGb(profit);
+        const winner_bidValue = byteToGb(winner_bid);
+        const min_bidValue = byteToGb(min_bid);
         const isEnded = coin.status === "end";
         return (
           <Row
@@ -109,15 +107,15 @@ export const AuctionPage = props => {
               {winner_bid ? (
                 <Statistic
                   title={t("pages.auction.fields.total")}
-                  value={winner_bidValue + 10000}
-                  suffix={winner_bidType}
+                  value={Number(winner_bidValue + 0.00001).toFixed(9)}
+                  // suffix={winner_bidType}
                   groupSeparator=" "
                 />
               ) : (
                 <Statistic
                   title={t("pages.auction.fields.min")}
-                  value={min_bidValue + 10000}
-                  suffix={min_bidType}
+                  value={Number(min_bidValue + 0.00001).toFixed(9)}
+                  // suffix={min_bidType}
                   groupSeparator=" "
                 />
               )}
@@ -134,8 +132,8 @@ export const AuctionPage = props => {
                 <Statistic
                   title={t("pages.auction.fields.profit")}
                   prefix="~"
-                  value={profitValue}
-                  suffix={profitType}
+                  value={Number(profitValue).toFixed(9)}
+                  // suffix={profitType}
                   groupSeparator=" "
                 />
               ) : (

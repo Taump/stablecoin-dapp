@@ -1,5 +1,4 @@
 {
-  "test": "test page",
   "pages": {
     "home": {
       "title": "Home",
@@ -149,7 +148,7 @@
           "name": "Number of stablecoins"
         }
       },
-      "submit": "Send {{newValue}} bytes"
+      "submit": "Send {{newValue}} GB"
     },
     "wallet": {
       "title": "My loans",

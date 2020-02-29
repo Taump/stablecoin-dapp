@@ -1,7 +1,6 @@
 import {
   ADD_BID_COIN_AUCTION,
   ADD_FOR_AUCTION,
-  END_AUCTION_REQUEST,
   END_AUCTION_RESPONSE,
   END_COIN_AUCTION,
   INIT_AUCTION,
@@ -57,14 +56,14 @@ export const auctionReducer = (state = initialState, action) => {
         }
       };
     }
-    case END_AUCTION_REQUEST: {
-      const newCoins = Object.assign({}, state.coins);
-      delete newCoins[action.payload.id];
-      return {
-        ...state,
-        coins: newCoins
-      };
-    }
+    // case END_AUCTION_REQUEST: {
+    //   const newCoins = Object.assign({}, state.coins);
+    //   delete newCoins[action.payload.id];
+    //   return {
+    //     ...state,
+    //     coins: newCoins
+    //   };
+    // }
     case END_AUCTION_RESPONSE: {
       const newCoins = Object.assign({}, state.coins);
       delete newCoins[action.payload.id];

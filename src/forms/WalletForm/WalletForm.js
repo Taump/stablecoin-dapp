@@ -24,6 +24,14 @@ export const WalletForm = ({ onChange }) => {
       help: ""
     }
   });
+  const [addressSingle, setAddressSingle] = useState({
+    value: "",
+    valid: false,
+    error: {
+      status: "",
+      help: ""
+    }
+  });
   const handleChangeAddress = ev => {
     const value = ev.target.value;
     if (value) {
@@ -86,32 +94,91 @@ export const WalletForm = ({ onChange }) => {
   };
 
   useEffect(() => {
-    onChange(scWalletsActive);
-  }, [onChange, scWalletsActive]);
+    if (scWallets.length > 0) {
+      onChange(scWalletsActive);
+    } else {
+      if (addressSingle.valid) {
+        onChange(addressSingle.value);
+      } else {
+        onChange("");
+      }
+    }
+  }, [onChange, scWalletsActive, addressSingle, scWallets]);
 
+  const handleAddressSingle = e => {
+    const value = e.target.value;
+    if (value) {
+      if (obyte.utils.isValidAddress(value)) {
+        setAddressSingle({
+          value,
+          valid: true,
+          error: {
+            status: "success",
+            help: ""
+          }
+        });
+        setScWalletsActive(value);
+        setWalletsActive(value);
+      } else {
+        setAddressSingle({
+          value,
+          valid: false,
+          error: {
+            status: "error",
+            help: t("forms.error.notValid", { field: "Address" })
+          }
+        });
+      }
+    } else {
+      setAddressSingle({
+        value: "",
+        valid: false,
+        error: {
+          status: "",
+          help: ""
+        }
+      });
+    }
+  };
   return (
     <Form>
       <Row>
         <Title level={3}>{t("forms.wallet.title")}</Title>
         <Col md={{ span: 16 }} xs={{ span: 24 }}>
-          <Form.Item>
-            <Select
-              key={"5464564590"}
-              size="large"
-              placeholder={t("forms.wallet.fields.selectAddress.name")}
-              onChange={address => {
-                setScWalletsActive(address);
-                setWalletsActive(address);
-              }}
-              value={walletsActive}
+          {scWallets.length > 0 ? (
+            <Form.Item>
+              <Select
+                key={"5464564590"}
+                size="large"
+                placeholder={t("forms.wallet.fields.selectAddress.name")}
+                onChange={address => {
+                  setScWalletsActive(address);
+                  setWalletsActive(address);
+                }}
+                value={walletsActive}
+              >
+                {scWallets.map((arr, i) => (
+                  <Option key={`${arr}${i}`} value={arr}>
+                    {arr}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          ) : (
+            <Form.Item
+              help={addressSingle.error.help}
+              hasFeedback
+              validateStatus={addressSingle.error.status}
             >
-              {scWallets.map((arr, i) => (
-                <Option key={`${arr}${i}`} value={arr}>
-                  {arr}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
+              <Input
+                placeholder={t("forms.wallet.modal.fields.address.name")}
+                size="large"
+                value={addressSingle.value}
+                onChange={handleAddressSingle}
+                autoFocus={true}
+              />
+            </Form.Item>
+          )}
         </Col>
         <Col md={{ span: 6, offset: 2 }} xs={{ span: 24 }}>
           <Button

@@ -27,7 +27,7 @@ export const LoanFullView = ({
         {amount / 10 ** activeParams.decimals}
       </Col>
       <Col xs={{ span: 12, offset: 2 }} md={{ span: 5, offset: 1 }}>
-        {collateral} ({percent}%)
+        {collateral / 10 ** 9} ({percent}%)
       </Col>
       <Col xs={{ span: 24, offset: 0 }} md={{ span: 14, offset: 1 }}>
         <Button

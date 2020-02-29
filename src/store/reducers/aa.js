@@ -12,9 +12,10 @@ import {
   ADD_COLLATERAL,
   LOAN_REPAY,
   EXPIRY_RATE,
-  ISSUE_STABLE_COIN
+  ISSUE_STABLE_COIN,
+  UPDATE_RATE
 } from "../types/aa";
-import { END_AUCTION_RESPONSE } from "../types/auction";
+import { ADD_BID_COIN_AUCTION, END_AUCTION_RESPONSE } from "../types/auction";
 
 const initialState = {
   network: true,
@@ -196,6 +197,33 @@ export const aaReducer = (state = initialState, action) => {
         }
       };
     }
+    case UPDATE_RATE: {
+      return {
+        ...state,
+        activeDataFeed: action.payload.data_feed,
+        activeDataFeedMa: action.payload.data_feed_ma
+      };
+    }
+
+    case ADD_BID_COIN_AUCTION: {
+      return {
+        ...state,
+        activeInfo: {
+          ...state.activeInfo,
+          [action.payload.id + "_winner_bid"]: action.payload.winner_bid,
+          [action.payload.id + "_auction_end_ts"]: action.payload.auction_end_ts
+        },
+        activeCoins: {
+          ...state.activeCoins,
+          [action.payload.id]: {
+            ...state.activeCoins[action.payload.id],
+            winner_bid: action.payload.winner_bid,
+            auction_end_ts: action.payload.auction_end_ts
+          }
+        }
+      };
+    }
+
     default:
       return state;
   }

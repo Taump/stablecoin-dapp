@@ -8,7 +8,8 @@ import {
   getAasByBase,
   subscribeBaseAA,
   openNetwork,
-  closeNetwork
+  closeNetwork,
+  updateRate
 } from "../../store/actions/aa";
 import client from "../../socket";
 
@@ -27,17 +28,16 @@ export const WatcherUpdate = props => {
     }
   }, [dispatch, aaActive]);
 
-  // useEffect(() => {
-  //   if (aaActive && network) {
-  //     const update = setInterval(
-  //       () => dispatch(updateInfoActiveAA(aaActive)),
-  //       10000
-  //     );
-  //     return () => {
-  //       clearInterval(update);
-  //     };
-  //   }
-  // }, [aaActive, dispatch, network]);
+  useEffect(() => {
+    if (aaActive && network) {
+      const update = setInterval(() => {
+        dispatch(updateRate());
+      }, 60000);
+      return () => {
+        clearInterval(update);
+      };
+    }
+  }, [aaActive, dispatch, network]);
 
   useEffect(() => {
     dispatch(watchRequestAas());

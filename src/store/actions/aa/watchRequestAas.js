@@ -219,6 +219,13 @@ export const watchRequestAas = () => (dispatch, getState) => {
               );
             } else if (
               aaActive === notificationObject.AA &&
+              notificationObject.tag === "res_asset"
+            ) {
+              dispatch({
+                type: ASSET_REQUEST
+              });
+            } else if (
+              aaActive === notificationObject.AA &&
               notificationObject.tag === "res_au_end"
             ) {
               const meta = notificationObject.meta;

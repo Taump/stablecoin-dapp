@@ -5,3 +5,4 @@ export { subscribeAA } from "./subscribeAA";
 export { subscribeBaseAA } from "./subscribeBaseAA";
 export { updateInfoActiveAA } from "./updateInfoActiveAA";
 export { watchRequestAas } from "./watchRequestAas";
+export { updateRate } from "./updateRate";
