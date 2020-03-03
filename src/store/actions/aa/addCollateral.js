@@ -6,7 +6,6 @@ export const addCollateral = (id, collateral) => async (dispatch, getState) => {
     const activeCoins = store.aa.activeCoins;
 
     const isFinded = String(id) in activeCoins;
-    console.log("isFinded", isFinded);
     if (isFinded && activeCoins[id].collateral >= collateral) {
       const exchange_rate = store.aa.activeDataFeedMa;
       const min_collateral =

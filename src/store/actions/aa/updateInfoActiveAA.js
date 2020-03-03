@@ -76,7 +76,6 @@ export const updateInfoActiveAA = address => async (dispatch, getState) => {
             coins[id].collateral < min_collateral_liquidation;
           coins[id].percent = percent;
           if (coins[id].atAuction && !(id in auction)) {
-            //  Отправляем на добавление (но нужно проверить еще есть ли уже там)
             const opening_collateral = Math.round(
               min_collateral * store.aa.activeParams.overcollateralization_ratio
             );
@@ -86,7 +85,6 @@ export const updateInfoActiveAA = address => async (dispatch, getState) => {
               })
             );
           } else if (!coins[id].atAuction && id in auction) {
-            //  Отправляем на удаление
             dispatch(removeForAuction(id));
           }
         }

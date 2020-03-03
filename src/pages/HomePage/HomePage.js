@@ -6,16 +6,18 @@ import { Row, Col, Typography, Statistic, Result } from "antd";
 import { SelectAA } from "../../components/SelectAA/SelectAA";
 import { LoanListByAddress } from "../../components/LoanListByAddress/LoanListByAddress";
 import { IssueStablecoinForm, WalletForm } from "../../forms";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { IssueAsset } from "../../components/IssueAsset/IssueAsset";
 import { ParamsView } from "../../components/ParamsView/ParamsView";
 import { ExpiredForm } from "../../forms/ExpiredForm/ExpiredForm";
+import { changeExpiryStatus } from "../../store/actions/aa";
 
 const { Title } = Typography;
 const { Countdown } = Statistic;
 
 export const HomePage = props => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const active = useSelector(state => state.aa.active);
   const activeParams = useSelector(state => state.aa.activeParams);
   const activeInfo = useSelector(state => state.aa.activeInfo);
@@ -24,7 +26,6 @@ export const HomePage = props => {
   const activeAssetRequest = useSelector(state => state.aa.activeAssetRequest);
   const isExpired = useSelector(state => state.aa.isExpired);
   const [address, setAddress] = useState("");
-  const finish = () => {};
   let screen = "";
   if (active) {
     if (
@@ -61,12 +62,36 @@ export const HomePage = props => {
                 {activeParams && activeParams.expiry_date && (
                   <Col>
                     <div style={{ textAlign: "center", marginRight: 15 }}>
-                      <Countdown
-                        title={t("pages.home.statistic.expiration")}
-                        format={"DD"}
-                        value={moment(activeParams.expiry_date)}
-                        onFinish={finish}
-                      />
+                      {moment
+                        .utc()
+                        .isSame(
+                          moment.utc(activeParams.expiry_date).add(-1, "day"),
+                          "day"
+                        ) ? (
+                        <Countdown
+                          title={t("pages.home.statistic.expirationTime")}
+                          format={"HH:mm:ss"}
+                          value={moment.utc(activeParams.expiry_date)}
+                          onFinish={() => dispatch(changeExpiryStatus())}
+                        />
+                      ) : (
+                        <>
+                          {moment
+                            .utc()
+                            .isBefore(moment.utc(activeParams.expiry_date)) ? (
+                            <Countdown
+                              title={t("pages.home.statistic.expiration")}
+                              format={"DD"}
+                              value={moment.utc(activeParams.expiry_date)}
+                            />
+                          ) : (
+                            <Statistic
+                              title={t("pages.home.statistic.expiration")}
+                              value={"Expired"}
+                            />
+                          )}
+                        </>
+                      )}
                     </div>
                   </Col>
                 )}

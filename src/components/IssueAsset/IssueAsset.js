@@ -21,7 +21,7 @@ export const IssueAsset = () => {
         extra={
           <a
             className="ant-btn ant-btn-primary"
-            href={`byteball${
+            href={`obyte${
               config.TESTNET ? "-tn" : ""
             }:${active}?amount=10000&base64data=${dataBase64}`}
           >

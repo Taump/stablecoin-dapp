@@ -73,7 +73,7 @@ export const PlaceBidModal = ({ visible, id, min, onCancel }) => {
     const data = JSON.stringify({ seize: 1, id });
     const dataBase64 = base64url(data);
     redirect(
-      `byteball${config.TESTNET ? "-tn" : ""}:${active}?amount=${
+      `obyte${config.TESTNET ? "-tn" : ""}:${active}?amount=${
         loanBid.count
       }&base64data=${dataBase64}`
     );

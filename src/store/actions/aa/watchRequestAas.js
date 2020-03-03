@@ -25,8 +25,8 @@ const openNotificationRequest = (address, event) => {
   notification.open({
     message: address,
     description: event,
-    duration: null,
-    style: { minWidth: 350 }
+    // duration: null,
+    style: { minWidth: 360, paddingLeft: 12, paddingRight: 12 }
   });
 };
 
@@ -64,7 +64,7 @@ export const watchRequestAas = () => (dispatch, getState) => {
               );
               await dispatch({
                 type: ADD_AA_TO_LIST,
-                payload: { address, definition, view }
+                payload: { address, definition, view, isStable: false }
               });
               await dispatch(deployRequest(address));
               await dispatch(changeActiveAA(address));
@@ -87,7 +87,7 @@ export const watchRequestAas = () => (dispatch, getState) => {
           const view = createStringDescrForAa(address, feed_name, expiry_date);
           dispatch({
             type: ADD_AA_TO_LIST,
-            payload: { address, definition, view }
+            payload: { address, definition, view, isStable: true }
           });
           if (address === store.deploy.wasIssued) {
             dispatch(pendingDeployResponse());

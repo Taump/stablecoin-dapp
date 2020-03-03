@@ -1,7 +1,7 @@
 import React from "react";
 import { Router, Route } from "react-router-dom";
 
-import { HomePage, DeployPage, AuctionPage } from "./pages";
+import { HomePage, DeployPage, AuctionPage, SearchPage } from "./pages";
 
 import history from "./history";
 
@@ -11,11 +11,14 @@ const AppRouter = () => {
       <Route exact path="/">
         <HomePage />
       </Route>
-      <Route exact path="/deploy">
+      <Route path="/deploy">
         <DeployPage />
       </Route>
-      <Route exact path="/auction">
+      <Route path="/auction">
         <AuctionPage />
+      </Route>
+      <Route path="/search">
+        <SearchPage />
       </Route>
     </Router>
   );

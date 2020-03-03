@@ -5,7 +5,8 @@
       "statistic": {
         "title": "Statistics",
         "total": "Total coins",
-        "expiration": "Days to expiration"
+        "expiration": "Days to expiration",
+        "expirationTime": "Time to expiration"
       }
     },
     "deploy": {
@@ -126,7 +127,7 @@
           "name": "Decimals",
           "descr": "This is decimals...."
         },
-        "moFeedName": {
+        "maFeedName": {
           "name": "Moving average feed name",
           "descr": "This is moFeedName...."
         },
@@ -157,7 +158,7 @@
           "name": "Select wallet address"
         }
       },
-      "submit": "Add",
+      "submit": "Add wallet",
       "modal": {
         "title": "Add new wallet address",
         "fields": {
@@ -225,7 +226,7 @@
         "decimals": "Decimals",
         "maFeedName": "Moving average feed name",
         "maxLoan": "Max loan value in underlying",
-        "expiryDate": "Max loan value in underlying"
+        "expiryDate": "Expiry date"
       }
     },
     "selectAA": {

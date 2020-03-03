@@ -29,7 +29,7 @@ export const LoanMobView = ({
       </Row>
       <Row>
         {t("components.loanListByAddress.titles.collateral")}:{" "}
-        {collateral / 10 ** 9} ({percent}%)
+        {collateral / 10 ** 9} GB ({percent}%)
       </Row>
       <Row style={{ marginTop: 10 }}>
         <Button

@@ -22,7 +22,7 @@ export const changeActiveAA = address => async (dispatch, getState) => {
       .utc(false)
       .unix();
 
-    const isExpired = DateNow > moment(params.expiry_date).unix();
+    const isExpired = DateNow > moment.utc(params.expiry_date).unix();
 
     try {
       data_feed = await client.api.getDataFeed({

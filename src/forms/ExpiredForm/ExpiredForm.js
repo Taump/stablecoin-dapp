@@ -20,7 +20,10 @@ export const ExpiredForm = () => {
       {expiry_exchange_rate ? (
         <>
           <Title level={3}>{t("forms.expired.title_rate")}</Title>
-          <Statistic value={expiry_exchange_rate} suffix={"GB"} />
+          <Statistic
+            value={Number(1 / expiry_exchange_rate).toFixed(9)}
+            suffix={"COIN"}
+          />
         </>
       ) : (
         <div>
@@ -30,7 +33,7 @@ export const ExpiredForm = () => {
           </p>
           <a
             className="ant-btn ant-btn-primary"
-            href={`byteball${
+            href={`obyte${
               config.TESTNET ? "-tn" : ""
             }:${active}?amount=10000&base64data=${dataBase64}`}
           >

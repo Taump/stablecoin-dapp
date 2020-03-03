@@ -13,14 +13,19 @@ import {
   LOAN_REPAY,
   EXPIRY_RATE,
   ISSUE_STABLE_COIN,
-  UPDATE_RATE
+  UPDATE_RATE,
+  EXPIRY_STATUS,
+  AAS_TOTAL_COIN_LIST_REQUEST,
+  AAS_TOTAL_COIN_LIST_SUCCESS
 } from "../types/aa";
 import { ADD_BID_COIN_AUCTION, END_AUCTION_RESPONSE } from "../types/auction";
 
 const initialState = {
   network: true,
   listByBase: [],
-  listByBaseLoaded: [],
+  listByBaseLoaded: false,
+  totalCoinList: {},
+  totalCoinListLoaded: false,
   active: null,
   activeInfo: null,
   activeAssetRequest: false,
@@ -66,7 +71,10 @@ export const aaReducer = (state = initialState, action) => {
       );
       return {
         ...state,
-        listByBase: [...newListByBase, action.payload]
+        listByBase: [
+          ...newListByBase,
+          { ...action.payload, isStable: action.payload.isStable }
+        ]
       };
     }
     case SUBSCRIBE_AA: {
@@ -223,7 +231,25 @@ export const aaReducer = (state = initialState, action) => {
         }
       };
     }
-
+    case EXPIRY_STATUS: {
+      return {
+        ...state,
+        isExpired: true
+      };
+    }
+    case AAS_TOTAL_COIN_LIST_REQUEST: {
+      return {
+        ...state,
+        totalCoinListLoaded: false
+      };
+    }
+    case AAS_TOTAL_COIN_LIST_SUCCESS: {
+      return {
+        ...state,
+        totalCoinList: action.payload,
+        totalCoinListLoaded: true
+      };
+    }
     default:
       return state;
   }

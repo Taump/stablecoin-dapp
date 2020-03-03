@@ -67,7 +67,7 @@ export const CollateralAddModal = ({ visible, id, onCancel }) => {
     const data = JSON.stringify({ add_collateral: 1, id });
     const dataBase64 = base64url(data);
     redirect(
-      `byteball${config.TESTNET ? "-tn" : ""}:${active}?amount=${
+      `obyte${config.TESTNET ? "-tn" : ""}:${active}?amount=${
         loanCollateral.count
       }&base64data=${dataBase64}`
     );

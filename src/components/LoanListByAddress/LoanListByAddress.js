@@ -65,7 +65,7 @@ export const LoanListByAddress = ({ address }) => {
 
     if (activeInfo && "asset" in activeInfo) {
       redirect(
-        `byteball${
+        `obyte${
           config.TESTNET ? "-tn" : ""
         }:${active}?amount=${amount}&asset=${encodeURIComponent(
           activeInfo.asset

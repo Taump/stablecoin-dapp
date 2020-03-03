@@ -8,7 +8,6 @@ export const repayLoan = (id, address) => async (dispatch, getState) => {
     const isOwner =
       String(id) in activeCoins && activeCoins[id].owner === address;
     const isNotAuction = !activeCoins[id].atAuction;
-    console.log("isOwner", isOwner);
     if (isOwner && isNotAuction) {
       if (!("repaid" in activeCoins[id])) {
         dispatch({

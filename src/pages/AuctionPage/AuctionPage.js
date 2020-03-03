@@ -108,14 +108,14 @@ export const AuctionPage = props => {
                 <Statistic
                   title={t("pages.auction.fields.total")}
                   value={Number(winner_bidValue + 0.00001).toFixed(9)}
-                  // suffix={winner_bidType}
+                  suffix={"GB"}
                   groupSeparator=" "
                 />
               ) : (
                 <Statistic
                   title={t("pages.auction.fields.min")}
                   value={Number(min_bidValue + 0.00001).toFixed(9)}
-                  // suffix={min_bidType}
+                  suffix={"GB"}
                   groupSeparator=" "
                 />
               )}
@@ -133,7 +133,7 @@ export const AuctionPage = props => {
                   title={t("pages.auction.fields.profit")}
                   prefix="~"
                   value={Number(profitValue).toFixed(9)}
-                  // suffix={profitType}
+                  suffix={"GB"}
                   groupSeparator=" "
                 />
               ) : (
@@ -162,7 +162,7 @@ export const AuctionPage = props => {
                         ? { marginTop: 30 }
                         : undefined
                     }
-                    href={`byteball${
+                    href={`obyte${
                       config.TESTNET ? "-tn" : ""
                     }:${active}?amount=10000&base64data=${dataBase64}`}
                   >

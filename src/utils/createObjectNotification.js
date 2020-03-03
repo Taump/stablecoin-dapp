@@ -140,7 +140,6 @@ const createObjectRequestNotification = (data, aaVars) => {
         trigger_unit
       };
     } else if ("repay" in payload) {
-      console.log(data.body);
       return {
         AA,
         title: t("notifications.repay.req.title", {

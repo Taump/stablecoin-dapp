@@ -1,61 +1,38 @@
 import React, { useState } from "react";
 import obyte from "obyte";
 import { trim } from "lodash";
-import { Form, Input, Button, Row, Col, DatePicker } from "antd";
-import moment from "moment";
-import { useDispatch } from "react-redux";
+import { Form, Input, Button, Row, Col, Switch } from "antd";
 
-import { pendingDeployRequest } from "../../store/actions/deploy";
-
-import { LabelForm } from "../../components/LabelForm/LabelForm";
-
-import config from "../../config";
-import { toNumericValue, t } from "../../utils";
+import { t } from "../../utils";
 
 const initStateInput = {
   value: "",
-  valid: true,
+  valid: false,
   error: {
-    status: "success",
+    status: "",
     help: ""
   }
 };
-const defaultValues = {
-  oracle: "F4KHJUCLJKY4JV7M5F754LAJX4EB7M4N",
-  feedName: "GBYTE_USD",
-  maFeedName: "GBYTE_USD_MA",
-  maxLoan: "10000000",
-  // maxLoan: "10000000000",
-  decimals: "2",
-  collateralizationRatio: "1.5",
-  liquidationRatio: "1.3"
-};
-export const DeployForm = ({ params }) => {
+
+export const SearchForm = ({ onSearch }) => {
+  const [hideExpired, setHideExpired] = useState(false);
   const [inputs, setInputs] = useState({
-    oracle: { ...initStateInput, value: defaultValues.oracle },
-    feedName: { ...initStateInput, value: defaultValues.feedName },
-    maFeedName: { ...initStateInput, value: defaultValues.maFeedName },
-    maxLoan: { ...initStateInput, value: defaultValues.maxLoan },
-    decimals: { ...initStateInput, value: defaultValues.decimals },
+    oracle: { ...initStateInput },
+    feedName: { ...initStateInput },
+    maFeedName: { ...initStateInput },
+    maxLoan: { ...initStateInput },
+    decimals: { ...initStateInput },
     collateralizationRatio: {
-      ...initStateInput,
-      value: defaultValues.collateralizationRatio
+      ...initStateInput
     },
     liquidationRatio: {
-      ...initStateInput,
-      value: defaultValues.liquidationRatio
+      ...initStateInput
     },
     expiryDate: {
-      ...initStateInput,
-      valid: false,
-      error: {
-        status: "",
-        help: ""
-      }
+      ...initStateInput
     },
     auctionPeriod: {
-      ...initStateInput,
-      value: "3000"
+      ...initStateInput
     }
   });
   const {
@@ -66,10 +43,8 @@ export const DeployForm = ({ params }) => {
     decimals,
     collateralizationRatio,
     liquidationRatio,
-    expiryDate,
     auctionPeriod
   } = inputs;
-  const dispatch = useDispatch();
   const changeInput = (name, value, valid, help, status = true) => {
     let statusValue;
     if (status) {
@@ -235,227 +210,99 @@ export const DeployForm = ({ params }) => {
     }
   };
 
-  const handleChangeExpiryDate = (momentDate, date) => {
-    if (momentDate) {
-      if (moment(date).isValid()) {
-        const StringDateNow = moment().format("YYYY-MM-DD");
-        if (moment(StringDateNow).isSameOrBefore(date)) {
-          changeInput("expiryDate", momentDate, true);
-        } else {
-          changeInput(
-            "expiryDate",
-            momentDate,
-            false,
-            t("forms.error.datePassed")
-          );
-        }
-      } else {
-        changeInput(
-          "expiryDate",
-          undefined,
-          false,
-          t("forms.error.notValid", { field: "Date" })
-        );
-      }
-    } else {
-      changeInput("expiryDate", undefined, false, "", false);
-    }
-  };
   const handleSummit = ev => {
     ev.preventDefault();
-    const url = `obyte${
-      config.TESTNET ? "-tn" : ""
-    }:data?app=definition&definition=${encodeURIComponent(AA)}`;
-    dispatch(
-      pendingDeployRequest(
-        {
-          oracle: oracle.value,
-          overcollateralization_ratio: toNumericValue(
-            collateralizationRatio.value
-          ),
-          max_loan_value_in_underlying: toNumericValue(
-            Number(maxLoan.value) * 10 ** Number(decimals.value)
-          ),
-          decimals: toNumericValue(decimals.value),
-          auction_period: toNumericValue(auctionPeriod.value),
-          liquidation_ratio: toNumericValue(liquidationRatio.value),
-          feed_name: feedName.value,
-          ma_feed_name: maFeedName.value,
-          expiry_date: expiryDate.valid && expiryDate.value.format("YYYY-MM-DD")
-        },
-        url
-      )
-    );
+    onSearch({ ...inputs, hideExpired });
   };
-  const AA = `{
-  base_aa: '${config.BASE_AA}',
-  params: {
-    oracle: '${oracle.value}',
-    overcollateralization_ratio: ${collateralizationRatio.value},
-    max_loan_value_in_underlying: ${String(
-      Number(maxLoan.value) * 10 ** Number(decimals.value)
-    )}, 
-    decimals: ${decimals.value}, 
-    auction_period: ${auctionPeriod.value}, 
-    liquidation_ratio: ${liquidationRatio.value}, 
-    feed_name: '${feedName.value}',
-    ma_feed_name: '${maFeedName.value}',
-    expiry_date: '${expiryDate.valid && expiryDate.value.format("YYYY-MM-DD")}'
-  }
-}`;
-  const validInputsData =
-    oracle.valid &&
-    feedName.valid &&
-    maFeedName.valid &&
-    maxLoan.valid &&
-    decimals.valid &&
-    collateralizationRatio.valid &&
-    liquidationRatio.valid &&
-    auctionPeriod.valid &&
-    expiryDate.valid;
 
   return (
     <Form onSubmit={handleSummit}>
       <Row>
-        <Form.Item
-          hasFeedback
-          validateStatus={oracle.error.status}
-          help={oracle.error.help}
-          label={<LabelForm field="oracle" page="deploy" tooltip={true} />}
-          colon={false}
-        >
+        <Form.Item>
           <Input
             size="large"
             value={oracle.value}
+            placeholder={t("forms.deploy.fields.oracle.name")}
             onChange={handleChangeOracle}
           />
         </Form.Item>
       </Row>
       <Row>
         <Col md={{ span: 7, offset: 0 }} xs={{ span: 24, offset: 0 }}>
-          <Form.Item
-            hasFeedback
-            validateStatus={collateralizationRatio.error.status}
-            help={collateralizationRatio.error.help}
-            label={
-              <LabelForm
-                field="overCollateralizationRatio"
-                page="deploy"
-                tooltip={true}
-              />
-            }
-            colon={false}
-          >
+          <Form.Item>
             <Input
               size="large"
               value={collateralizationRatio.value}
               onChange={ev => handleChangeRation(ev, "collateralizationRatio")}
+              placeholder={t(
+                "forms.deploy.fields.overCollateralizationRatio.name"
+              )}
             />
           </Form.Item>
         </Col>
         <Col xs={{ span: 24, offset: 0 }} md={{ span: 7, offset: 2 }}>
-          <Form.Item
-            hasFeedback
-            validateStatus={liquidationRatio.error.status}
-            help={liquidationRatio.error.help}
-            label={
-              <LabelForm
-                field="liquidationRatio"
-                page="deploy"
-                tooltip={true}
-              />
-            }
-            colon={false}
-          >
+          <Form.Item>
             <Input
               size="large"
               value={liquidationRatio.value}
               onChange={ev => handleChangeRation(ev, "liquidationRatio")}
+              placeholder={t("forms.deploy.fields.liquidationRatio.name")}
             />
           </Form.Item>
         </Col>
         <Col xs={{ span: 24, offset: 0 }} md={{ span: 6, offset: 2 }}>
-          <Form.Item
-            hasFeedback
-            validateStatus={auctionPeriod.error.status}
-            help={auctionPeriod.error.help}
-            label={
-              <LabelForm field="auctionPeriod" page="deploy" tooltip={true} />
-            }
-            colon={false}
-          >
+          <Form.Item>
             <Input
               size="large"
               value={auctionPeriod.value}
               onChange={handleAuctionPeriod}
+              placeholder={t("forms.deploy.fields.auctionPeriod.name")}
             />
           </Form.Item>
         </Col>
       </Row>
       <Row>
         <Col xs={{ span: 24, offset: 0 }} md={{ span: 11 }}>
-          <Form.Item
-            hasFeedback
-            validateStatus={feedName.error.status}
-            help={feedName.error.help}
-            label={<LabelForm field="feedName" page="deploy" tooltip={true} />}
-            colon={false}
-          >
+          <Form.Item>
             <Input
               size="large"
               value={feedName.value}
               onChange={ev => handleChangeFeed(ev, "feedName")}
+              placeholder={t("forms.deploy.fields.feedName.name")}
             />
           </Form.Item>
         </Col>
         <Col xs={{ span: 24, offset: 0 }} md={{ span: 11, offset: 2 }}>
-          <Form.Item
-            hasFeedback
-            validateStatus={maFeedName.error.status}
-            help={maFeedName.error.help}
-            label={
-              <LabelForm field="maFeedName" page="deploy" tooltip={true} />
-            }
-            colon={false}
-          >
+          <Form.Item>
             <Input
               size="large"
               value={maFeedName.value}
               onChange={ev => handleChangeFeed(ev, "maFeedName")}
+              placeholder={t("forms.deploy.fields.maFeedName.name")}
             />
           </Form.Item>
         </Col>
       </Row>
       <Row>
         <Col xs={{ span: 24, offset: 0 }} md={{ span: 11, offset: 0 }}>
-          <Form.Item
-            hasFeedback
-            validateStatus={maxLoan.error.status}
-            help={maxLoan.error.help}
-            label={<LabelForm field="maxLoan" page="deploy" tooltip={true} />}
-            colon={false}
-          >
+          <Form.Item>
             <Input
               size="large"
               style={{ width: "100%" }}
               onChange={handleChangeMaxLoan}
               value={maxLoan.value}
+              placeholder={t("forms.deploy.fields.maxLoan.name")}
             />
           </Form.Item>
         </Col>
         <Col xs={{ span: 24, offset: 0 }} md={{ span: 11, offset: 2 }}>
-          <Form.Item
-            hasFeedback
-            validateStatus={decimals.error.status}
-            help={decimals.error.help}
-            label={<LabelForm field="decimals" page="deploy" tooltip={true} />}
-            colon={false}
-          >
+          <Form.Item>
             <Input
               size="large"
               style={{ width: "100%" }}
               value={decimals.value}
               onChange={handleChangeDecimal}
+              placeholder={t("forms.deploy.fields.decimals.name")}
             />
           </Form.Item>
         </Col>
@@ -463,33 +310,16 @@ export const DeployForm = ({ params }) => {
 
       <Row>
         <Col xs={{ span: 24, offset: 0 }} md={{ span: 11 }}>
-          <Form.Item
-            hasFeedback
-            validateStatus={expiryDate.error.status}
-            help={expiryDate.error.help}
-            label={
-              <LabelForm field="expiryDate" page="deploy" tooltip={true} />
-            }
-            colon={false}
-          >
-            <DatePicker
-              size="large"
-              style={{ width: "100%" }}
-              onChange={handleChangeExpiryDate}
-              value={expiryDate.value ? moment(expiryDate.value) : undefined}
-            />
+          <Form.Item>
+            <span style={{ marginRight: 10 }}>Hide expired AA: </span>
+            <Switch onChange={setHideExpired} />
           </Form.Item>
         </Col>
       </Row>
       <Row>
         <Form.Item>
-          <Button
-            type="primary"
-            size="large"
-            htmlType="submit"
-            disabled={!validInputsData}
-          >
-            {t("forms.deploy.submit")}
+          <Button type="primary" size="large" htmlType="submit">
+            Search
           </Button>
         </Form.Item>
       </Row>

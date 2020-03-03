@@ -15,6 +15,7 @@ export const getAasByBase = () => async dispatch => {
       aaByBase.forEach(aa => {
         const { feed_name, expiry_date } = aa.definition[1].params;
         aa.view = createStringDescrForAa(aa.address, feed_name, expiry_date);
+        aa.isStable = true;
       });
     }
     await dispatch({

@@ -43,10 +43,10 @@ export const ParamsView = () => {
               <b>{t("components.paramsView.params.oracle")}:</b> {oracle}
             </p>
           )}
-          {max_loan_value_in_underlying && (
+          {decimals && max_loan_value_in_underlying && (
             <p>
               <b>{t("components.paramsView.params.maxLoan")}:</b>{" "}
-              {max_loan_value_in_underlying}
+              {max_loan_value_in_underlying / 10 ** decimals}
             </p>
           )}
           {feed_name && (

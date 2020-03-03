@@ -18,7 +18,7 @@ export const IssueStablecoinForm = () => {
   const active = useSelector(state => state.aa.active);
   const handleChange = ev => {
     const getCount = ev.target.value;
-    const reg = /^[0-9]+$/;
+    const reg = /^[0-9.]+$/;
     if (reg.test(String(getCount)) || getCount === "") {
       setCount(String(getCount));
     }
@@ -40,7 +40,7 @@ export const IssueStablecoinForm = () => {
     setCount("");
   };
 
-  const url = `byteball${
+  const url = `obyte${
     config.TESTNET ? "-tn" : ""
   }:${active}?amount=${newValue}&amp;asset=base`;
 
