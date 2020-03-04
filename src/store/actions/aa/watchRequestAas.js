@@ -39,15 +39,21 @@ export const watchRequestAas = () => (dispatch, getState) => {
         const address =
           result[1].body.messages[0].payload &&
           result[1].body.messages[0].payload.address;
+
         if (address) {
-          openNotificationRequest(
-            t("notifications.deploy.req.title"),
-            t("notifications.deploy.req.subTitle", { address })
-          );
           const params =
             result[1].body.messages[0].payload.definition &&
             result[1].body.messages[0].payload.definition[1] &&
             result[1].body.messages[0].payload.definition[1].params;
+          openNotificationRequest(
+            t("notifications.deploy.req.title", {
+              address,
+              feed_name: params.feed_name,
+              expiry_date: params.expiry_date
+            }),
+            null
+          );
+
           if (
             store.deploy.pending &&
             params &&
@@ -79,12 +85,16 @@ export const watchRequestAas = () => (dispatch, getState) => {
           result[1].body.messages[0].payload &&
           result[1].body.messages[0].payload.definition;
         if (address && definition) {
-          openNotificationRequest(
-            t("notifications.deploy.res.title"),
-            t("notifications.deploy.res.subTitle", { address })
-          );
           const { feed_name, expiry_date } = definition[1].params;
           const view = createStringDescrForAa(address, feed_name, expiry_date);
+          openNotificationRequest(
+            t("notifications.deploy.res.title", {
+              address,
+              feed_name,
+              expiry_date
+            }),
+            null
+          );
           dispatch({
             type: ADD_AA_TO_LIST,
             payload: { address, definition, view, isStable: true }

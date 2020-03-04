@@ -17,7 +17,6 @@ export const IssueAsset = () => {
       <Result
         icon={<Icon type="loading" />}
         title={t("components.asset.status.pending.title")}
-        subTitle={t("components.asset.status.pending.subTitle")}
         extra={
           <a
             className="ant-btn ant-btn-primary"

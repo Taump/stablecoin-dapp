@@ -6,7 +6,7 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { changeActiveAA } from "../../store/actions/aa";
 import { t } from "../../utils";
 import styles from "../SelectAA/SelectAA.module.css";
-
+import moment from "moment";
 const { Option, OptGroup } = Select;
 
 export const SelectAA = props => {
@@ -44,6 +44,11 @@ export const SelectAA = props => {
       scRecentAas.find(aa => aa.address === aaBase.address) === undefined
   );
 
+  const test = notRecentAaListByBase.slice().sort((prev, next) => {
+    const prevTime = prev.definition["1"].params.expiry_date;
+    const nextTime = next.definition["1"].params.expiry_date;
+    return moment.utc(nextTime) - moment.utc(prevTime);
+  });
   return (
     <Select
       className={styles.select}
@@ -88,7 +93,7 @@ export const SelectAA = props => {
           t("components.selectAA.group.all")
         }
       >
-        {notRecentAaListByBase.map((aa, i) => {
+        {test.map((aa, i) => {
           return (
             <Option
               key={"AA" + i}

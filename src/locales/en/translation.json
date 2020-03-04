@@ -3,8 +3,7 @@
     "home": {
       "title": "Home",
       "statistic": {
-        "title": "Statistics",
-        "total": "Total coins",
+        "total": "Total stablecoins",
         "expiration": "Days to expiration",
         "expirationTime": "Time to expiration"
       }
@@ -29,31 +28,31 @@
         "end": "End auction",
         "bid": "Place a bid"
       },
-      "empty": "No lots at auction"
+      "empty": "No loans on auction"
     }
   },
   "notifications": {
     "deploy": {
       "req": {
-        "title": "Deployment Request for New AA",
-        "subTitle": "Its address is {{address}}"
+        "title": "Request to deploy a new stablecoin “{{feed_name}} on {{expiry_date}}”",
+        "subTitle": ""
       },
       "res": {
-        "title": "AA was successfully deployed",
-        "subTitle": "Its address is {{address}}"
+        "title": "New stablecoin “{{feed_name}} on {{expiry_date}}” deployed. Its address is {{address}}.",
+        "subTitle": " "
       }
     },
     "seize": {
       "req": {
-        "title": "Request a new bid at the auction"
+        "title": "New auction bid received"
       },
       "res": {
-        "title": "New auction bid"
+        "title": "New auction bid applied"
       }
     },
     "end_auction": {
       "req": {
-        "title": "Auction End Request"
+        "title": "Request to end an auction"
       },
       "res": {
         "title": "Auction finished"
@@ -61,10 +60,10 @@
     },
     "expire": {
       "req": {
-        "title": "Request recording rate at expiration date"
+        "title": "Request to record the exchange rate on the expiration date"
       },
       "res": {
-        "title": "Rate at the expiration date was recorded"
+        "title": "Exchange rate on the expiration date was recorded"
       }
     },
     "asset": {
@@ -105,42 +104,42 @@
       "fields": {
         "auctionPeriod" : {
           "name": "Auction period (seconds)",
-          "descr": "This is auctionPeriod...."
+          "descr": "When a loan becomes undercollateralized, it is put up on auction and is sold to the highest bidder. If a bid is not outbid by another bidder during the auction period, the auction ends and the loan is transferred to the winner."
         },
         "liquidationRatio" : {
           "name": "liquidation ratio",
-          "descr": "If the collateralization ratio of your loan drops below this value, the loan will be auctioned and sold to the highest bidder"
+          "descr": "If the collateralization ratio of a loan drops below this value, the loan will be auctioned and sold to the highest bidder."
         },
         "overCollateralizationRatio": {
-          "name": "Over collateralization ratio",
-          "descr": "This is overCollateralizationRatio...."
+          "name": "Overcollateralization ratio",
+          "descr": "Amount of collateral required to issue stablecoins relative to the value of stablecoins. For example, if the value of collateral must be 150% the value of stablecoins to be issued, overcollateralization ratio is 1.5."
         },
         "oracle": {
           "name": "Oracle",
-          "descr": "This is oracle...."
+          "descr": "Address of price oracle that tracks the exchange rate between the target currency (e.g. USD) and the collateral currency (e.g. GBYTE)."
         },
         "feedName": {
           "name": "Feed name",
-          "descr": "This is feedName...."
+          "descr": "Name of the data feed where the oracle posts the exchange rate."
         },
         "decimals": {
           "name": "Decimals",
-          "descr": "This is decimals...."
+          "descr": "Number of decimals used to represent the stablecoin amounts. This number determines the precision of all calculations with the stablecoins. Internally, stablecoin amounts are always represented as integer numbers that are 10^decimals times bigger than displayed amounts."
         },
         "maFeedName": {
           "name": "Moving average feed name",
-          "descr": "This is moFeedName...."
+          "descr": "Name of the data feed where the oracle posts a moving average of the exchange rate. Moving average is designed to smooth the volatility of the instantaneous exchange rate and prevent premature liquidations."
         },
         "maxLoan": {
-          "name": "Max loan value in underlying",
-          "descr": "This is maxLoan...."
+          "name": "Max loan value",
+          "descr": "Maximum number of stablecoins that can be borrowed in a single loan. If it is too large, there could be no or few participants who are able to buy the loan from auction should the loan become undercollateralized. Large borrowers can still take several loans."
         },
         "expiryDate": {
           "name": "Expiry date",
-          "descr": "This is expiryDate...."
+          "descr": "Date when the stablecoin becomes exchangeable for the collateral currency at exchange rate registered on that date. After that date, no more loans will be issued."
         }
       },
-      "submit": "Open deploy screen"
+      "submit": "Deploy..."
     },
     "issueStablecoin": {
       "title": "Issue stablecoins",
@@ -197,35 +196,34 @@
       "title": "Issuing Asset",
       "status": {
         "pending" : {
-          "title": "Issue asset",
-          "subTitle": "As soon as we receive a request to issue an asset, you will proceed to the next step",
-          "button": "Issue"
+          "title": "Stablecoin AA created, now please define its asset",
+          "button": "Define Asset..."
         }
       }
     },
     "loanListByAddress": {
       "titles": {
-        "amount": "Count coins",
+        "amount": "Stablecoins",
         "collateral": "Collateral",
         "actions": "Actions"
       },
       "actions": {
         "collateral": "Add collateral",
-        "repayment": "Repayment"
+        "repayment": "Repay the loan"
       },
       "empty": "No loans"
     },
     "paramsView": {
-      "title": "Parameters included in the autonomous agent",
+      "title": "Parameters of the stablecoin",
       "params": {
         "auctionPeriod": "Auction period (seconds)",
         "liquidationRatio": "liquidation ratio",
-        "overCollateralizationRatio": "Over collateralization ratio",
+        "overCollateralizationRatio": "Overcollateralization ratio",
         "oracle": "Oracle",
         "feedName": "Feed name",
         "decimals": "Decimals",
         "maFeedName": "Moving average feed name",
-        "maxLoan": "Max loan value in underlying",
+        "maxLoan": "Max loan value",
         "expiryDate": "Expiry date"
       }
     },
@@ -251,7 +249,7 @@
       },
       "fields": {
         "count": {
-          "name": "Count byte"
+          "name": "Amount in GBYTEs"
         }
       }
     },

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { Layout } from "../../components/Layout/Layout";
-import { Row, Col, Typography, Statistic, Result } from "antd";
+import { Row, Col, Statistic, Result } from "antd";
 import { SelectAA } from "../../components/SelectAA/SelectAA";
 import { LoanListByAddress } from "../../components/LoanListByAddress/LoanListByAddress";
 import { IssueStablecoinForm, WalletForm } from "../../forms";
@@ -12,7 +12,6 @@ import { ParamsView } from "../../components/ParamsView/ParamsView";
 import { ExpiredForm } from "../../forms/ExpiredForm/ExpiredForm";
 import { changeExpiryStatus } from "../../store/actions/aa";
 
-const { Title } = Typography;
 const { Countdown } = Statistic;
 
 export const HomePage = props => {
@@ -57,7 +56,6 @@ export const HomePage = props => {
               {isExpired ? <ExpiredForm /> : <IssueStablecoinForm />}
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 14, offset: 2 }}>
-              <Title level={3}>{t("pages.home.statistic.title")}</Title>
               <Row type="flex">
                 {activeParams && activeParams.expiry_date && (
                   <Col>

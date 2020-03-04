@@ -113,7 +113,7 @@ export const SearchPage = props => {
       width: 100
     },
     {
-      title: "Total coins",
+      title: "Total stablecoins",
       dataIndex: "total",
       key: "total",
       width: 100
@@ -291,6 +291,9 @@ export const SearchPage = props => {
                 </div>
                 <div>
                   <b>Expiry date:</b> {aa.expiry_date}
+                </div>
+                <div>
+                  <b>Total stablecoins:</b> {aa.total}
                 </div>
               </div>
             );

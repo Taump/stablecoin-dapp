@@ -34,7 +34,7 @@ export const ParamsView = () => {
         )}
       >
         <Panel
-          header="Parameters included in the autonomous agent"
+          header={t("components.paramsView.title")}
           key="1"
           style={customPanelStyle}
         >

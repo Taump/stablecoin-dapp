@@ -132,7 +132,7 @@ export const DeployForm = ({ params }) => {
   };
   const handleChangeMaxLoan = ev => {
     const value = ev.target.value || "";
-    const reg = /^[0-9]+$/g;
+    const reg = /^[0-9.]+$/g;
     if (value) {
       if (reg.test(value)) {
         if (Number(value) <= 10000000000000000) {
