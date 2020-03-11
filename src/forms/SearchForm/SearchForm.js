@@ -311,7 +311,7 @@ export const SearchForm = ({ onSearch }) => {
       <Row>
         <Col xs={{ span: 24, offset: 0 }} md={{ span: 11 }}>
           <Form.Item>
-            <span style={{ marginRight: 10 }}>Hide expired AA: </span>
+            <span style={{ marginRight: 10 }}>Hide expired stablecoins? </span>
             <Switch onChange={setHideExpired} />
           </Form.Item>
         </Col>

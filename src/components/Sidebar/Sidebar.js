@@ -4,9 +4,11 @@ import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styles from "../Sidebar/Sidebar.module.css";
 import i18n from "../../i18n";
+import { useSelector } from "react-redux";
 const { Sider } = Layout;
 
 export const Sidebar = ({ active }) => {
+  // const aaActive = useSelector(state => state.aa.active);
   const { t } = useTranslation("", { i18n });
   const dataMenu = [
     {
@@ -19,7 +21,7 @@ export const Sidebar = ({ active }) => {
       key: "auction",
       icon: "profile",
       title: t("pages.auction.title"),
-      path: "/auction"
+      path: `/auction`
     },
     {
       key: "search",

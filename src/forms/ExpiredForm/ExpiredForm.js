@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import config from "../../config";
 import base64url from "base64url";
 import { t } from "../../utils";
+import { ExchangeStablecoinForm } from "../ExchangeStablecoinForm/ExchangeStablecoinForm";
 
 const { Title } = Typography;
 
@@ -21,9 +22,10 @@ export const ExpiredForm = () => {
         <>
           <Title level={3}>{t("forms.expired.title_rate")}</Title>
           <Statistic
-            value={Number(1 / expiry_exchange_rate).toFixed(9)}
-            suffix={"COIN"}
+            value={Number(expiry_exchange_rate)}
+            suffix={<small>STABLECOINS</small>}
           />
+          <ExchangeStablecoinForm />
         </>
       ) : (
         <div>

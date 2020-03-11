@@ -123,10 +123,66 @@ export const watchRequestAas = () => (dispatch, getState) => {
             (notificationObject && notificationObject.AA === aaActive) ||
             (!aaActive && notificationObject)
           ) {
-            openNotificationRequest(
-              notificationObject.AA,
-              notificationObject.title
-            );
+            if (notificationObject.tag === "req_asset") {
+              const list = store.aa.listByBase;
+              const aaInfo = list.filter(
+                aa => aa.address === notificationObject.AA
+              );
+              if ("definition" in aaInfo["0"]) {
+                const { expiry_date, feed_name } = aaInfo[
+                  "0"
+                ].definition[1].params;
+
+                openNotificationRequest(
+                  notificationObject.AA,
+                  t("notifications.asset.req.title", {
+                    expiry_date,
+                    feed_name
+                  })
+                );
+              }
+            } else if (notificationObject.tag === "req_stable") {
+              const list = store.aa.listByBase;
+              const aaInfo = list.filter(
+                aa => aa.address === notificationObject.AA
+              );
+              if ("definition" in aaInfo["0"]) {
+                const {
+                  feed_name,
+                  oracle,
+                  overcollateralization_ratio
+                } = aaInfo["0"].definition[1].params;
+                let data_feed;
+                try {
+                  data_feed = await client.api.getDataFeed({
+                    oracles: [oracle],
+                    feed_name: feed_name,
+                    ifnone: "none"
+                  });
+                } catch (e) {
+                  console.log("error", e);
+                }
+
+                if (data_feed && data_feed !== "none") {
+                  const count =
+                    notificationObject.meta.collateral /
+                    ((1e9 / data_feed) * overcollateralization_ratio);
+
+                  openNotificationRequest(
+                    notificationObject.AA,
+                    t("notifications.issueStablecoin.req.title", {
+                      address: notificationObject.meta.address,
+                      count: count.toFixed(2)
+                    })
+                  );
+                }
+              }
+            } else {
+              openNotificationRequest(
+                notificationObject.AA,
+                notificationObject.title
+              );
+            }
             dispatch({
               type: ADD_AA_NOTIFICATION,
               payload: notificationObject
@@ -180,10 +236,30 @@ export const watchRequestAas = () => (dispatch, getState) => {
             (notificationObject && notificationObject.AA === aaActive) ||
             (!aaActive && notificationObject)
           ) {
-            openNotificationRequest(
-              notificationObject.AA,
-              notificationObject.title
-            );
+            if (notificationObject.tag === "res_asset") {
+              const list = store.aa.listByBase;
+              const aaInfo = list.filter(
+                aa => aa.address === notificationObject.AA
+              );
+              if ("definition" in aaInfo["0"]) {
+                const { expiry_date, feed_name } = aaInfo[
+                  "0"
+                ].definition[1].params;
+
+                openNotificationRequest(
+                  notificationObject.AA,
+                  t("notifications.asset.res.title", {
+                    expiry_date,
+                    feed_name
+                  })
+                );
+              }
+            } else {
+              openNotificationRequest(
+                notificationObject.AA,
+                notificationObject.title
+              );
+            }
             dispatch({
               type: ADD_AA_NOTIFICATION,
               payload: notificationObject

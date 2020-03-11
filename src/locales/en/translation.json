@@ -38,7 +38,7 @@
         "subTitle": ""
       },
       "res": {
-        "title": "New stablecoin “{{feed_name}} on {{expiry_date}}” deployed. Its address is {{address}}.",
+        "title": "New stablecoin “{{feed_name}} on {{expiry_date}}” deployed. Its address is {{address}}",
         "subTitle": " "
       }
     },
@@ -68,15 +68,15 @@
     },
     "asset": {
       "req": {
-        "title": "Request for issue asset by {{address}}"
+        "title": "Request to define asset for stablecoin “{{feed_name}} on {{expiry_date}}”"
       },
       "res": {
-        "title": "Asset was issued"
+        "title": "Asset was defined for stablecoin “{{feed_name}} on {{expiry_date}}”"
       }
     },
     "issueStablecoin" : {
       "req": {
-        "title": "Request for issue stablecoin by {{address}}"
+        "title": "Request to issue {{count}} stablecoins by {{address}}”"
       },
       "res": {
         "title": "{{count}} stablecoins were issued by {{address}}"
@@ -84,18 +84,18 @@
     },
     "addCollateral" : {
       "req": {
-        "title": "Request for add collateral by {{address}}"
+        "title": "Adding of collateral initiated by {{address}}"
       },
       "res": {
-        "title": "Collateral was add"
+        "title": "Collateral was added"
       }
     },
     "repay" : {
       "req": {
-        "title": "Request for repayment of the loan by {{address}}"
+        "title": "Loan repayment initiated by {{address}}"
       },
       "res": {
-        "title": "The loan was repaid by {{address}}"
+        "title": "{{address}} repaid a loan"
       }
     }
   },
@@ -148,7 +148,7 @@
           "name": "Number of stablecoins"
         }
       },
-      "submit": "Send {{newValue}} GB"
+      "submit": "Send {{newValue}} GB as collateral"
     },
     "wallet": {
       "title": "My loans",
@@ -228,11 +228,11 @@
       }
     },
     "selectAA": {
-      "placeholder": "Select a AA",
+      "placeholder": "Select a stablecoin",
       "group": {
-        "recent": "Recent AAs",
-        "other": "Other AAs",
-        "all": "All AAs"
+        "recent": "Recent stablecoins",
+        "other": "Other stablecoins",
+        "all": "All stablecoins"
       }
     }
   },

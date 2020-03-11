@@ -12,7 +12,7 @@ export const IssueStablecoinForm = () => {
   const [count, setCount] = useState("");
   const issueBtn = useRef(null);
   const exchange_rate = useSelector(state => state.aa.activeDataFeed);
-  const { overcollateralization_ratio } = useSelector(
+  const { overcollateralization_ratio, liquidation_ratio } = useSelector(
     state => state.aa.activeParams
   );
   const active = useSelector(state => state.aa.active);
@@ -24,13 +24,6 @@ export const IssueStablecoinForm = () => {
     }
   };
   const amount = Number(count);
-  // const newValue = Math.ceil(
-  //   (1000000000 *
-  //     (1 / exchange_rate) *
-  //     overcollateralization_ratio *
-  //     Number(count)) /
-  //     Math.exp(decimals * Math.log(10))
-  // );
   const newValue = Math.ceil(
     (1e9 / exchange_rate) * overcollateralization_ratio * amount
   );
@@ -58,7 +51,7 @@ export const IssueStablecoinForm = () => {
       <Form.Item>
         <a
           href={url}
-          className="ant-btn ant-btn-primary ant-btn-lg"
+          className="ant-btn ant-btn-primary"
           ref={issueBtn}
           disabled={count === ""}
         >
@@ -67,6 +60,14 @@ export const IssueStablecoinForm = () => {
           })}
         </a>
       </Form.Item>
+      {overcollateralization_ratio && liquidation_ratio && (
+        <div style={{ marginBottom: 15 }}>
+          You’ll get your collateral back when you return the stablecoins.{" "}
+          <br />
+          Initial collateral {Number(overcollateralization_ratio) * 100}%,
+          minimum collateral {Number(liquidation_ratio) * 100}%.
+        </div>
+      )}
     </Form>
   );
 };

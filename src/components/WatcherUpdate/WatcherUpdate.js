@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Result } from "antd";
-
+import { message, Result } from "antd";
+import obyte from "obyte";
 import {
   changeActiveAA,
   watchRequestAas,
@@ -12,12 +12,52 @@ import {
   updateRate
 } from "../../store/actions/aa";
 import client from "../../socket";
-
+import history from "../../history";
 export const WatcherUpdate = props => {
   const dispatch = useDispatch();
   const aaActive = useSelector(state => state.aa.active);
+  const listByBase = useSelector(state => state.aa.listByBase);
+  const listByBaseLoaded = useSelector(state => state.aa.listByBaseLoaded);
   const network = useSelector(state => state.aa.network);
 
+  useEffect(() => {
+    console.log("history", history);
+    if (aaActive) {
+      history.replace({ ...history.location.pathname, hash: `#${aaActive}` });
+    }
+    const unlisten = history.listen((location, action) => {
+      console.log(action, location.pathname, location.state);
+      if (action === "PUSH" || action === "PUP") {
+        if (aaActive) {
+          history.replace({ ...location.pathname, hash: `#${aaActive}` });
+        }
+      }
+    });
+    // history.pushState({}, null, `#${aaActive}`);
+    return () => {
+      unlisten();
+    };
+    // }
+  }, [dispatch, aaActive]);
+  useEffect(() => {
+    if (history.location.hash !== "") {
+      if (listByBaseLoaded) {
+        const address = history.location.hash.slice(1);
+        if (obyte.utils.isValidAddress(address)) {
+          if (aaActive !== address) {
+            const wasFound = listByBase.findIndex(aa => aa.address === address);
+            if (wasFound !== -1) {
+              dispatch(changeActiveAA(address));
+            } else {
+              message.error("Address is not found!");
+            }
+          }
+        } else {
+          message.error("Address is not valid!");
+        }
+      }
+    }
+  }, [dispatch, listByBaseLoaded]);
   // useEffect(() => {
   //   dispatch(subscribeBaseAA());
   // }, [dispatch]);

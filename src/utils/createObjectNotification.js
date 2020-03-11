@@ -210,15 +210,25 @@ const createObjectRequestNotification = (data, aaVars) => {
       unit.authors["0"] &&
       unit.authors["0"].address
     ) {
-      return {
-        AA,
-        title: t("notifications.issueStablecoin.req.title", {
-          address: data.body.unit.authors["0"].address
-        }),
-        tag: "req_stable",
-        time,
-        trigger_unit
-      };
+      const collateral =
+        data.body.unit.messages[0].payload &&
+        data.body.unit.messages[0].payload.outputs &&
+        data.body.unit.messages[0].payload.outputs["0"].address === AA
+          ? data.body.unit.messages[0].payload.outputs["0"].amount
+          : data.body.unit.messages[0].payload.outputs["1"].amount;
+      if (collateral) {
+        return {
+          AA,
+          // title: t("notifications.issueStablecoin.req.title", {
+          //   address: data.body.unit.authors["0"].address
+          // }),
+          tag: "req_stable",
+          trigger_address: data.body.unit.authors["0"].address,
+          time,
+          trigger_unit,
+          meta: { address: data.body.unit.authors["0"].address, collateral }
+        };
+      }
     }
   }
 };

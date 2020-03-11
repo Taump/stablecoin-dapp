@@ -19,6 +19,7 @@ export const HomePage = props => {
   const dispatch = useDispatch();
   const active = useSelector(state => state.aa.active);
   const activeParams = useSelector(state => state.aa.activeParams);
+  const activeCoins = useSelector(state => state.aa.activeCoins);
   const activeInfo = useSelector(state => state.aa.activeInfo);
   const activeDataFeedMa = useSelector(state => state.aa.activeDataFeedMa);
   const activeDataFeed = useSelector(state => state.aa.activeDataFeed);
@@ -26,7 +27,15 @@ export const HomePage = props => {
   const isExpired = useSelector(state => state.aa.isExpired);
   const [address, setAddress] = useState("");
   let screen = "";
+  let totalCollateral = 0;
   if (active) {
+    for (let asset in activeCoins) {
+      if ("collateral" in activeCoins[asset]) {
+        if (!("repaid" in activeCoins[asset])) {
+          totalCollateral += Number(activeCoins[asset].collateral);
+        }
+      }
+    }
     if (
       !(
         activeDataFeed &&
@@ -44,11 +53,31 @@ export const HomePage = props => {
   }
 
   return (
-    <Layout title={t("pages.home.title")} page="home">
+    <Layout title="Discount stablecoins" page="home">
       <Row style={{ marginBottom: 25 }}>
         <SelectAA autoFocus={true} />
         {active && <ParamsView />}
       </Row>
+      {!active && (
+        <Row style={{ fontSize: 18 }}>
+          <p>
+            Issue and redeem discount stablecoins. <br /> Or define a new
+            stablecoin linked to an asset of your choice.
+          </p>
+          <p>
+            Every stablecoin has guaranteed liquidity after its expiry date,
+            exactly at the exchange rate registered on the expiry date.
+          </p>
+          <p>
+            Before the expiry date, stablecoins are freely traded between users,
+            and each stablecoin is expected to trade with discount relative to
+            its underlying asset. <br /> The closer to the expiry, the smaller
+            the discount. <br /> Buying a stablecoin early (with larger
+            discount) and selling later (with smaller discount) allows to earn
+            interest.
+          </p>
+        </Row>
+      )}
       {screen && screen === "home" && (
         <>
           <Row style={{ marginBottom: 25 }}>
@@ -95,7 +124,7 @@ export const HomePage = props => {
                 )}
                 {activeInfo && "circulating_supply" in activeInfo && (
                   <Col>
-                    <div style={{ textAlign: "center" }}>
+                    <div style={{ textAlign: "center", marginRight: 15 }}>
                       <Statistic
                         title={t("pages.home.statistic.total")}
                         value={
@@ -106,6 +135,15 @@ export const HomePage = props => {
                     </div>
                   </Col>
                 )}
+                <Col>
+                  <div style={{ textAlign: "center" }}>
+                    <Statistic
+                      title="Total collateral"
+                      value={totalCollateral / 10 ** 9}
+                      suffix={"GB"}
+                    />
+                  </div>
+                </Col>
               </Row>
             </Col>
           </Row>

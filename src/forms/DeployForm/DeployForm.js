@@ -24,8 +24,7 @@ const defaultValues = {
   oracle: "F4KHJUCLJKY4JV7M5F754LAJX4EB7M4N",
   feedName: "GBYTE_USD",
   maFeedName: "GBYTE_USD_MA",
-  maxLoan: "10000000",
-  // maxLoan: "10000000000",
+  maxLoan: "100000",
   decimals: "2",
   collateralizationRatio: "1.5",
   liquidationRatio: "1.3"
@@ -136,18 +135,7 @@ export const DeployForm = ({ params }) => {
     if (value) {
       if (reg.test(value)) {
         if (Number(value) <= 10000000000000000) {
-          if (Number(value) * 10 ** Number(decimals.value) >= 1000000000) {
-            changeInput("maxLoan", value, true);
-          } else {
-            changeInput(
-              "maxLoan",
-              value,
-              false,
-              t("forms.error.minNum", {
-                count: String(1000000000 / 10 ** Number(decimals.value))
-              })
-            );
-          }
+          changeInput("maxLoan", value, true);
         } else {
           changeInput("maxLoan", value, false, t("forms.error.muchValue"));
         }

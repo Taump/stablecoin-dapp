@@ -18,11 +18,11 @@ export const CollateralAddModal = ({ visible, id, onCancel }) => {
   const active = useSelector(state => state.aa.active);
   const handleChangeCollateralCount = ev => {
     const value = ev.target.value || "";
-    const reg = /^[0-9]+$/g;
+    const reg = /^[0-9.]+$/g;
     if (value) {
       if (reg.test(value)) {
-        if (Number(value) <= 10000000000000000) {
-          if (Number(value) >= 100000) {
+        if (Number(value) <= 10000000000000000 / 10 ** 9) {
+          if (Number(value) >= 100000 / 10 ** 9) {
             setLoanCollateral({
               ...loanCollateral,
               count: value,
@@ -34,7 +34,7 @@ export const CollateralAddModal = ({ visible, id, onCancel }) => {
             setLoanCollateral({
               ...loanCollateral,
               count: value,
-              help: t("forms.error.minNum", { count: "100 000" }),
+              help: t("forms.error.minNum", { count: 100000 / 10 ** 9 }),
               status: "error",
               valid: false
             });
@@ -67,9 +67,10 @@ export const CollateralAddModal = ({ visible, id, onCancel }) => {
     const data = JSON.stringify({ add_collateral: 1, id });
     const dataBase64 = base64url(data);
     redirect(
-      `obyte${config.TESTNET ? "-tn" : ""}:${active}?amount=${
-        loanCollateral.count
-      }&base64data=${dataBase64}`
+      `obyte${
+        config.TESTNET ? "-tn" : ""
+      }:${active}?amount=${loanCollateral.count *
+        10 ** 9}&base64data=${dataBase64}`
     );
     setLoanCollateral(initLoanCollateralState);
     onCancel();
