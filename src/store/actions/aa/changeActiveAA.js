@@ -88,21 +88,28 @@ export const changeActiveAA = address => async (dispatch, getState) => {
             "collateral" in coins[id] &&
             Number(coins[id].amount) !== 0
           ) {
-            const exchange_rate = store.aa.activeDataFeedMa;
-            const min_collateral =
-              (coins[id].amount /
-                Math.pow(10, store.aa.activeParams.decimals) /
-                exchange_rate) *
-              1000000000;
-            const min_collateral_liquidation = Math.round(
-              min_collateral * store.aa.activeParams.liquidation_ratio
+            const exchange_rate = Number(data_feed_ma);
+            const decimals = params.decimals;
+            const liquidation_ratio = Number(params.liquidation_ratio);
+            const overcollateralization_ratio = Number(
+              params.overcollateralization_ratio
             );
+            const amount = Number(coins[id].amount);
+
+            const min_collateral =
+              (amount / Math.pow(10, decimals) / exchange_rate) * 1000000000;
+
+            const min_collateral_liquidation = Math.round(
+              Number(min_collateral) * liquidation_ratio
+            );
+
             // const percent = Math.ceil(
             //   (coins[id].collateral / min_collateral) * 100
             // );
 
             coins[id].atAuction =
-              coins[id].collateral < min_collateral_liquidation;
+              Number(coins[id].collateral) < min_collateral_liquidation;
+
             // coins[id].percent = percent;
             if (coins[id].collateral < min_collateral_liquidation) {
               const DateNow = moment().unix();
@@ -113,8 +120,7 @@ export const changeActiveAA = address => async (dispatch, getState) => {
                 moment(DateNow) > Number(coins[id].auction_end_ts);
               auctionCoins[id] = { ...coins[id] };
               auctionCoins[id].opening_collateral = Math.round(
-                min_collateral *
-                  store.aa.activeParams.overcollateralization_ratio
+                min_collateral * overcollateralization_ratio
               );
               if (!("winner_bid" in coins[id])) {
                 auctionCoins[id].status = "open";

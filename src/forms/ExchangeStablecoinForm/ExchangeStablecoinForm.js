@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Button, Form, Input } from "antd";
-import { t } from "../../utils";
+import { Form, Input } from "antd";
 import { useSelector } from "react-redux";
 import config from "../../config";
 

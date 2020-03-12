@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { message, Result } from "antd";
 import obyte from "obyte";
@@ -21,23 +21,19 @@ export const WatcherUpdate = props => {
   const network = useSelector(state => state.aa.network);
 
   useEffect(() => {
-    console.log("history", history);
     if (aaActive) {
       history.replace({ ...history.location.pathname, hash: `#${aaActive}` });
     }
     const unlisten = history.listen((location, action) => {
-      console.log(action, location.pathname, location.state);
       if (action === "PUSH" || action === "PUP") {
         if (aaActive) {
           history.replace({ ...location.pathname, hash: `#${aaActive}` });
         }
       }
     });
-    // history.pushState({}, null, `#${aaActive}`);
     return () => {
       unlisten();
     };
-    // }
   }, [dispatch, aaActive]);
   useEffect(() => {
     if (history.location.hash !== "") {
@@ -57,6 +53,7 @@ export const WatcherUpdate = props => {
         }
       }
     }
+    // eslint-disable-next-line
   }, [dispatch, listByBaseLoaded]);
   // useEffect(() => {
   //   dispatch(subscribeBaseAA());

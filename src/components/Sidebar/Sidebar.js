@@ -4,7 +4,6 @@ import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styles from "../Sidebar/Sidebar.module.css";
 import i18n from "../../i18n";
-import { useSelector } from "react-redux";
 const { Sider } = Layout;
 
 export const Sidebar = ({ active }) => {
