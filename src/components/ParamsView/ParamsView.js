@@ -193,7 +193,7 @@ export const ParamsView = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Link to explorer
+                View on explorer
               </a>
             )}
           </p>

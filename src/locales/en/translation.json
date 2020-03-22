@@ -17,7 +17,7 @@
       }
     },
     "auction": {
-      "title": "Auction",
+      "title": "Auctions",
       "fields": {
         "time": "Time until auction ends",
         "min": "Minimum bid",

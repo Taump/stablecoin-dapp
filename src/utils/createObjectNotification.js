@@ -14,7 +14,8 @@ const createObjectResponseNotification = (data, aaVars, decimals) => {
           title: t("notifications.asset.res.title"),
           tag: "res_asset",
           time,
-          trigger_unit
+          trigger_unit,
+          meta: resVars.asset
         };
       } else if ("amount" in resVars && "id" in resVars && "owner" in resVars) {
         return {

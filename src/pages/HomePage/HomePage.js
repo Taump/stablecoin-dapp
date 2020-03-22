@@ -11,6 +11,7 @@ import { IssueAsset } from "../../components/IssueAsset/IssueAsset";
 import { ParamsView } from "../../components/ParamsView/ParamsView";
 import { ExpiredForm } from "../../forms/ExpiredForm/ExpiredForm";
 import { changeExpiryStatus } from "../../store/actions/aa";
+import { RegistryToken } from "../../components/RegistryToken/RegistryToken";
 
 const { Countdown } = Statistic;
 
@@ -25,6 +26,7 @@ export const HomePage = props => {
   const activeDataFeed = useSelector(state => state.aa.activeDataFeed);
   const activeAssetRequest = useSelector(state => state.aa.activeAssetRequest);
   const isExpired = useSelector(state => state.aa.isExpired);
+  const registryToken = useSelector(state => state.deploy.registryToken);
   const [address, setAddress] = useState("");
   let screen = "";
   let totalCollateral = 0;
@@ -47,6 +49,8 @@ export const HomePage = props => {
       screen = "data_feed";
     } else if (!("asset" in activeInfo || activeAssetRequest)) {
       screen = "asset";
+    } else if (registryToken) {
+      screen = "registryToken";
     } else {
       screen = "home";
     }
@@ -54,30 +58,33 @@ export const HomePage = props => {
 
   return (
     <Layout title="Discount stablecoins" page="home">
+      {!active && (
+        <Row style={{ fontSize: 18 }}>
+          <Col xs={{ span: 24 }} lg={{ span: 16 }} xl={{ span: 12 }}>
+            <p>
+              Issue and redeem discount stablecoins. Or define a new stablecoin
+              linked to an asset of your choice.
+            </p>
+            <p>
+              Every stablecoin has guaranteed liquidity after its expiry date,
+              exactly at the exchange rate registered on the expiry date.
+            </p>
+            <p>
+              Before the expiry date, stablecoins are freely traded between
+              users, and each stablecoin is expected to trade with discount
+              relative to its underlying asset. The closer to the expiry, the
+              smaller the discount. Buying a stablecoin early (with larger
+              discount) and selling later (with smaller discount) allows to earn
+              interest.
+            </p>
+          </Col>
+        </Row>
+      )}
       <Row style={{ marginBottom: 25 }}>
         <SelectAA autoFocus={true} />
         {active && <ParamsView />}
       </Row>
-      {!active && (
-        <Row style={{ fontSize: 18 }}>
-          <p>
-            Issue and redeem discount stablecoins. <br /> Or define a new
-            stablecoin linked to an asset of your choice.
-          </p>
-          <p>
-            Every stablecoin has guaranteed liquidity after its expiry date,
-            exactly at the exchange rate registered on the expiry date.
-          </p>
-          <p>
-            Before the expiry date, stablecoins are freely traded between users,
-            and each stablecoin is expected to trade with discount relative to
-            its underlying asset. <br /> The closer to the expiry, the smaller
-            the discount. <br /> Buying a stablecoin early (with larger
-            discount) and selling later (with smaller discount) allows to earn
-            interest.
-          </p>
-        </Row>
-      )}
+
       {screen && screen === "home" && (
         <>
           <Row style={{ marginBottom: 25 }}>
@@ -161,6 +168,7 @@ export const HomePage = props => {
         <Result status="warning" title="The oracle is not responding " />
       )}
       {screen && screen === "asset" && <IssueAsset />}
+      {screen && screen === "registryToken" && <RegistryToken />}
     </Layout>
   );
 };

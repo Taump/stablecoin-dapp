@@ -155,6 +155,10 @@ export const WalletForm = ({ onChange }) => {
     <Form>
       <Row>
         <Title level={3}>{t("forms.wallet.title")}</Title>
+        <p style={{ fontSize: 18 }}>
+          This is the list of stablecoin loans you received from its Autonomous
+          Agent
+        </p>
         <Col md={{ span: 16 }} xs={{ span: 24 }}>
           <Form.Item>
             <Select

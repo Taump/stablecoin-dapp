@@ -6,6 +6,7 @@ import {
   SUBSCRIBE_AA,
   CHANGE_ACTIVE_AA,
   ASSET_REQUEST,
+  ASSET_RESPONSE,
   UPDATE_INFO_ACTIVE_AA,
   OPEN_NETWORK,
   CLOSE_NETWORK,
@@ -63,6 +64,15 @@ export const aaReducer = (state = initialState, action) => {
       return {
         ...state,
         activeAssetRequest: true
+      };
+    }
+    case ASSET_RESPONSE: {
+      return {
+        ...state,
+        activeInfo: {
+          ...state.activeInfo,
+          asset: action.payload
+        }
       };
     }
     case ADD_AA_TO_LIST: {

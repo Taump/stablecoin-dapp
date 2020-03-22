@@ -7,7 +7,7 @@ import {
   createStringDescrForAa,
   t
 } from "../../../utils";
-import { ADD_AA_TO_LIST, ASSET_REQUEST } from "../../types/aa";
+import { ADD_AA_TO_LIST, ASSET_REQUEST, ASSET_RESPONSE } from "../../types/aa";
 import { deployRequest, pendingDeployResponse } from "../deploy";
 import { ADD_AA_NOTIFICATION } from "../../types/notifications";
 import { changeActiveAA } from "./index";
@@ -164,9 +164,16 @@ export const watchRequestAas = () => (dispatch, getState) => {
                 }
 
                 if (data_feed && data_feed !== "none") {
-                  const count =
-                    notificationObject.meta.collateral /
-                    ((1e9 / data_feed) * overcollateralization_ratio);
+                  let count;
+                  if ("expiry_exchange_rate" in aaVars) {
+                    count =
+                      notificationObject.meta.collateral /
+                      (1e9 / aaVars.expiry_exchange_rate);
+                  } else {
+                    count =
+                      notificationObject.meta.collateral /
+                      ((1e9 / data_feed) * overcollateralization_ratio);
+                  }
 
                   openNotificationRequest(
                     notificationObject.AA,
@@ -308,7 +315,8 @@ export const watchRequestAas = () => (dispatch, getState) => {
               notificationObject.tag === "res_asset"
             ) {
               dispatch({
-                type: ASSET_REQUEST
+                type: ASSET_RESPONSE,
+                payload: notificationObject.meta
               });
             } else if (
               aaActive === notificationObject.AA &&

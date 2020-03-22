@@ -24,6 +24,7 @@ export const AuctionPage = props => {
   const { t } = useTranslation("", { i18n });
   const coins = useSelector(state => state.auction.coins);
   const active = useSelector(state => state.aa.active);
+  const { liquidation_ratio } = useSelector(state => state.aa.activeParams);
   const [activeBidInfo, setActiveBidInfo] = useState(null);
   const [width] = useWindowSize();
   const dispatch = useDispatch();
@@ -34,7 +35,18 @@ export const AuctionPage = props => {
   }
   return (
     <Layout title={t("pages.auction.title")} page="auction">
-      <Row style={{ marginBottom: 25 }}>
+      {!isNaN(Number(liquidation_ratio)) && (
+        <Row style={{ fontSize: 18, marginBottom: 25 }}>
+          <Col xs={{ span: 24 }} lg={{ span: 16 }} xl={{ span: 12 }}>
+            This is the list of loans whose collateralization ratio dropped
+            below minimum ({Number(liquidation_ratio) * 100}%) and they are put
+            on auction. The winner of an action becomes the new owner of the
+            loan being auctioned and has an opportunity to pay for it less than
+            its collateral value.
+          </Col>
+        </Row>
+      )}
+      <Row>
         <SelectAA autoFocus={true} />
         {active && <ParamsView />}
       </Row>
