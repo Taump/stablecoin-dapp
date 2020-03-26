@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { truncate } from "lodash";
 import moment from "moment";
 import { Layout } from "../../components/Layout/Layout";
 import { Row, Col, Statistic, Result } from "antd";
@@ -26,6 +27,7 @@ export const HomePage = props => {
   const activeDataFeed = useSelector(state => state.aa.activeDataFeed);
   const activeAssetRequest = useSelector(state => state.aa.activeAssetRequest);
   const isExpired = useSelector(state => state.aa.isExpired);
+  const symbol = useSelector(state => state.aa.symbol);
   const registryToken = useSelector(state => state.deploy.registryToken);
   const [address, setAddress] = useState("");
   let screen = "";
@@ -133,7 +135,11 @@ export const HomePage = props => {
                   <Col>
                     <div style={{ textAlign: "center", marginRight: 15 }}>
                       <Statistic
-                        title={t("pages.home.statistic.total")}
+                        title={
+                          symbol
+                            ? "Total " + truncate(symbol, { length: 12 })
+                            : "Total stablecoins"
+                        }
                         value={
                           activeInfo.circulating_supply /
                           10 ** activeParams.decimals

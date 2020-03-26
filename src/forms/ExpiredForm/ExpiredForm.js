@@ -12,6 +12,7 @@ const { Title } = Typography;
 export const ExpiredForm = () => {
   const active = useSelector(state => state.aa.active);
   const activeInfo = useSelector(state => state.aa.activeInfo);
+  const symbol = useSelector(state => state.aa.symbol);
   const expiry_exchange_rate = activeInfo.expiry_exchange_rate || null;
   const dataString = JSON.stringify({ expire: 1 });
   const dataBase64 = base64url(dataString);
@@ -23,7 +24,7 @@ export const ExpiredForm = () => {
           <Title level={3}>{t("forms.expired.title_rate")}</Title>
           <Statistic
             value={Number(expiry_exchange_rate)}
-            suffix={<small>STABLECOINS</small>}
+            suffix={<small>{symbol ? symbol : "STABLECOINS"}</small>}
           />
           <ExchangeStablecoinForm />
         </>

@@ -10,6 +10,7 @@ import config from "../../config";
 import { redirect, t } from "../../utils";
 
 import styles from "./LoanListByAddress.module.css";
+import { truncate } from "lodash";
 
 export const LoanListByAddress = ({ address }) => {
   const [width] = useWindowSize();
@@ -18,6 +19,7 @@ export const LoanListByAddress = ({ address }) => {
   const activeInfo = useSelector(state => state.aa.activeInfo);
   const exchange_rate = useSelector(state => state.aa.activeDataFeedMa);
   const activeParams = useSelector(state => state.aa.activeParams);
+  const symbol = useSelector(state => state.aa.symbol);
 
   const [idCollateral, setIdCollateral] = useState(null);
 
@@ -110,7 +112,9 @@ export const LoanListByAddress = ({ address }) => {
       {LoanList && LoanList.length > 0 && width > 768 && (
         <Row className={styles.mobTitle}>
           <Col xs={{ span: 10, offset: 0 }} md={{ span: 3, offset: 0 }}>
-            {t("components.loanListByAddress.titles.amount")}
+            {symbol
+              ? truncate(symbol, { length: 12 })
+              : t("components.loanListByAddress.titles.amount")}
           </Col>
           <Col xs={{ span: 12, offset: 2 }} md={{ span: 5, offset: 1 }}>
             {t("components.loanListByAddress.titles.collateral")}

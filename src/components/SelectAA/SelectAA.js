@@ -21,14 +21,12 @@ export const SelectAA = props => {
     dispatch(changeActiveAA(address));
     let aaListStorage = scRecentAas;
     if (recentActive) {
-      const findAaInRecent = aaListStorage.findIndex(
-        aa => aa.address === address
-      );
+      const findAaInRecent = aaListStorage.findIndex(aa => aa === address);
       if (findAaInRecent === -1) {
         if (aaListStorage && aaListStorage.length >= 5) {
           aaListStorage.pop();
         }
-        aaListStorage.unshift(aaListByBase.find(aa => aa.address === address));
+        aaListStorage.unshift(address);
       } else {
         [aaListStorage[0], aaListStorage[findAaInRecent]] = [
           aaListStorage[findAaInRecent],
@@ -40,8 +38,7 @@ export const SelectAA = props => {
   };
 
   const notRecentAaListByBase = aaListByBase.filter(
-    aaBase =>
-      scRecentAas.find(aa => aa.address === aaBase.address) === undefined
+    aaBase => scRecentAas.find(aa => aa === aaBase.address) === undefined
   );
 
   const test = notRecentAaListByBase.slice().sort((prev, next) => {
@@ -72,16 +69,20 @@ export const SelectAA = props => {
       {recentActive && scRecentAas.length >= 1 && (
         <OptGroup label={t("components.selectAA.group.recent")}>
           {scRecentAas &&
-            scRecentAas.map((aa, i) => {
-              return (
-                <Option
-                  key={"AA" + i}
-                  value={aa.address}
-                  style={{ fontWeight: "regular" }}
-                >
-                  {aa.view}
-                </Option>
-              );
+            scRecentAas.map((address, i) => {
+              const aa = aaListByBase.find(aa => aa.address === address);
+              if (aa) {
+                return (
+                  <Option
+                    key={"AA" + i}
+                    value={aa.address}
+                    style={{ fontWeight: "regular" }}
+                  >
+                    {aa.view}
+                  </Option>
+                );
+              }
+              return null;
             })}
         </OptGroup>
       )}

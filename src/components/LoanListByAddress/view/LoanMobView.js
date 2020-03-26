@@ -17,6 +17,7 @@ export const LoanMobView = ({
   handleClickRepayment
 }) => {
   const activeParams = useSelector(state => state.aa.activeParams);
+  const symbol = useSelector(state => state.aa.symbol);
   return (
     <div
       className={styles.mobRow}
@@ -24,7 +25,7 @@ export const LoanMobView = ({
       key={"loan-min-" + amount + "-" + collateral}
     >
       <Row>
-        {t("components.loanListByAddress.titles.amount")}:{" "}
+        {symbol ? symbol : t("components.loanListByAddress.titles.amount")}:{" "}
         {amount / 10 ** activeParams.decimals}
       </Row>
       <Row>

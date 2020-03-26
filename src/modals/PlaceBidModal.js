@@ -24,11 +24,11 @@ export const PlaceBidModal = ({ visible, id, min, onCancel }) => {
   }, [min]);
   const handleChangeCollateralCount = ev => {
     const value = ev.target.value || "";
-    const reg = /^[0-9]+$/g;
+    const reg = /^[0-9.]+$/g;
     if (value) {
       if (reg.test(value)) {
         if (Number(value) <= 10000000000000000) {
-          if (Number(value) >= min) {
+          if (Number(value) >= min / 10 ** 9) {
             setLoanBid({
               ...loanBid,
               count: value,
@@ -73,9 +73,8 @@ export const PlaceBidModal = ({ visible, id, min, onCancel }) => {
     const data = JSON.stringify({ seize: 1, id });
     const dataBase64 = base64url(data);
     redirect(
-      `obyte${config.TESTNET ? "-tn" : ""}:${active}?amount=${
-        loanBid.count
-      }&base64data=${dataBase64}`
+      `obyte${config.TESTNET ? "-tn" : ""}:${active}?amount=${loanBid.count *
+        10 ** 9}&base64data=${dataBase64}`
     );
     setLoanBid(initLoanBidState);
     onCancel();
@@ -89,7 +88,7 @@ export const PlaceBidModal = ({ visible, id, min, onCancel }) => {
     <Modal
       visible={visible}
       onCancel={handleCancel}
-      title={t("modals.placeBid.title")}
+      title={t("modals.placeBid.title") + " (GBYTEs)"}
       footer={[
         <Button key="cancel" onClick={handleCancel}>
           {t("modals.placeBid.submits.cancel.name")}

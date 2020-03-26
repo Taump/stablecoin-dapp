@@ -6,6 +6,7 @@ import { CHANGE_ACTIVE_AA } from "../../types/aa";
 import { subscribeAA } from "./";
 import { initAuction } from "../auction";
 import moment from "moment";
+import config from "../../../config";
 
 export const changeActiveAA = address => async (dispatch, getState) => {
   try {
@@ -54,6 +55,18 @@ export const changeActiveAA = address => async (dispatch, getState) => {
         });
       } else {
         const aaState = await client.api.getAaStateVars({ address });
+        let symbol;
+        if ("asset" in aaState) {
+          const symbolOrAsset = await client.api.getSymbolByAsset(
+            config.TOKEN_REGISTRY_AA_ADDRESS,
+            aaState.asset
+          );
+          if (
+            aaState.asset.replace(/[+=]/, "").substr(0, 6) !== symbolOrAsset
+          ) {
+            symbol = symbolOrAsset;
+          }
+        }
         let coins = {};
         for (const fields in aaState) {
           const field = fields.split("_");
@@ -141,6 +154,7 @@ export const changeActiveAA = address => async (dispatch, getState) => {
             aaVars: aaState,
             params,
             coins,
+            symbol,
             data_feed,
             data_feed_ma,
             isExpired

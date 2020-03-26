@@ -1,14 +1,17 @@
 import React from "react";
-import { Collapse, Icon, Row, Tooltip } from "antd";
-import { useSelector } from "react-redux";
+import { Button, Collapse, Icon, Row, Tooltip } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 import { t } from "../../utils";
 import styles from "../LabelForm/LabelForm.module.css";
 import config from "../../config";
+import { tokenRegistrySwitch } from "../../store/actions/deploy";
 
 const { Panel } = Collapse;
 
 export const ParamsView = () => {
+  let history = useHistory();
   const {
     overcollateralization_ratio,
     decimals,
@@ -21,12 +24,14 @@ export const ParamsView = () => {
     expiry_date
   } = useSelector(state => state.aa.activeParams);
   const aaActive = useSelector(state => state.aa.active);
+  const { asset } = useSelector(state => state.aa.activeInfo);
   const customPanelStyle = {
     background: "#fff",
     borderRadius: 4,
     border: 0,
     overflow: "hidden"
   };
+  const dispatch = useDispatch();
   return (
     <Row>
       <Collapse
@@ -185,7 +190,8 @@ export const ParamsView = () => {
               {expiry_date}
             </p>
           )}
-          <p>
+
+          <div>
             {aaActive && (
               <a
                 href={`https://${config.TESTNET &&
@@ -196,7 +202,20 @@ export const ParamsView = () => {
                 View on explorer
               </a>
             )}
-          </p>
+          </div>
+
+          {asset && (
+            <Button
+              type="link"
+              style={{ padding: 0 }}
+              onClick={() => {
+                dispatch(tokenRegistrySwitch(true));
+                history.push("/");
+              }}
+            >
+              Register a token for stablecoin
+            </Button>
+          )}
         </Panel>
       </Collapse>
     </Row>

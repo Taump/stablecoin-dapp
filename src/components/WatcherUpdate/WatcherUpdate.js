@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { message, Result } from "antd";
+import { message, Result, Spin } from "antd";
 import obyte from "obyte";
 import {
   changeActiveAA,
@@ -144,7 +144,23 @@ export const WatcherUpdate = props => {
   //   // }
   //   console.log("TEST NEW SOCKET");
   // }, [network, dispatch, client, aaActive]);
-
+  if (!listByBaseLoaded) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100vw",
+          height: "100vh"
+        }}
+      >
+        <div>
+          <Spin size="large" />
+        </div>
+      </div>
+    );
+  }
   if (network) {
     return <div>{props.children}</div>;
   } else if (!network) {

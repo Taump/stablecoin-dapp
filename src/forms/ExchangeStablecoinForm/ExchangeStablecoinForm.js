@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { Form, Input } from "antd";
 import { useSelector } from "react-redux";
 import config from "../../config";
+import { truncate } from "lodash";
 
 export const ExchangeStablecoinForm = () => {
   const [countStable, setCountStable] = useState("");
@@ -11,6 +12,7 @@ export const ExchangeStablecoinForm = () => {
 
   const active = useSelector(state => state.aa.active);
   const activeInfo = useSelector(state => state.aa.activeInfo);
+  const symbol = useSelector(state => state.aa.symbol);
   const { decimals } = useSelector(state => state.aa.activeParams);
   const expiry_exchange_rate = Number(activeInfo.expiry_exchange_rate);
   const urlStable = `obyte${
@@ -93,7 +95,7 @@ export const ExchangeStablecoinForm = () => {
               {(Number(countGbyte) * expiry_exchange_rate).toFixed(
                 Number(decimals)
               )}{" "}
-              stablecoins
+              {symbol ? truncate(symbol, { length: 12 }) : "stablecoins"}
             </small>
           }
         >
@@ -112,7 +114,8 @@ export const ExchangeStablecoinForm = () => {
             ref={issueBtnGbyte}
             disabled={countGbyte === "" || Number(countGbyte) === 0}
           >
-            Exchange for stablecoins
+            Exchange for{" "}
+            {symbol ? truncate(symbol, { length: 12 }) : "stablecoins"}
           </a>
         </Form.Item>
       </Form>

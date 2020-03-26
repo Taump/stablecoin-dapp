@@ -24,10 +24,10 @@ export const LoanFullView = ({
       style={{ color }}
     >
       <Col xs={{ span: 10, offset: 0 }} md={{ span: 3, offset: 0 }}>
-        {amount / 10 ** activeParams.decimals}
+        {(amount / 10 ** activeParams.decimals).toFixed(activeParams.decimals)}
       </Col>
       <Col xs={{ span: 12, offset: 2 }} md={{ span: 5, offset: 1 }}>
-        {collateral / 10 ** 9} GB ({percent}%)
+        {(collateral / 10 ** 9).toFixed(9)} GB ({percent}%)
       </Col>
       <Col xs={{ span: 24, offset: 0 }} md={{ span: 14, offset: 1 }}>
         <Button

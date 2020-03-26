@@ -29,6 +29,7 @@ const initialState = {
   totalCoinListLoaded: false,
   active: null,
   activeInfo: null,
+  symbol: null,
   activeAssetRequest: false,
   activeParams: {},
   activeCoins: {},
@@ -116,7 +117,8 @@ export const aaReducer = (state = initialState, action) => {
         activeDataFeed: action.payload.data_feed,
         activeDataFeedMa: action.payload.data_feed_ma,
         activeAssetRequest: false,
-        isExpired: action.payload.isExpired
+        isExpired: action.payload.isExpired,
+        symbol: action.payload.symbol || null
       };
     }
     case UPDATE_INFO_ACTIVE_AA: {
