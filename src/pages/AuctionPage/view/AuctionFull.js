@@ -27,13 +27,14 @@ export const AuctionFull = ({ data }) => {
         gutter={10}
       >
         <Col xl={{ span: 3 }}>
-          {symbol ? truncate(symbol, { length: 12 }) : "Stablecoins"}
+          Loan amount (
+          {symbol ? truncate(symbol, { length: 12 }) : "stablecoins"})
         </Col>
         <Col xl={{ span: 3 }}>Owner</Col>
         <Col xl={{ span: 4 }}>Collateral (GB)</Col>
         <Col xl={{ span: 3 }}>Time until ends</Col>
-        <Col xl={{ span: 4 }}>Current bid (GB)</Col>
-        <Col xl={{ span: 4 }}>Profit (GB)</Col>
+        <Col xl={{ span: 4 }}>Current/Min Bid (GB)</Col>
+        <Col xl={{ span: 4 }}>Expected profit (GB)</Col>
       </Row>
       {data.map(coin => (
         <Lot

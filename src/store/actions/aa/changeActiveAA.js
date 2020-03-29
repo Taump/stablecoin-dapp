@@ -39,6 +39,7 @@ export const changeActiveAA = address => async (dispatch, getState) => {
     } catch (e) {
       console.log("error", e);
     }
+
     if (isValid || store.deploy.wasIssued) {
       if (store.deploy.wasIssued === address) {
         await dispatch({
@@ -67,6 +68,7 @@ export const changeActiveAA = address => async (dispatch, getState) => {
             symbol = symbolOrAsset;
           }
         }
+
         let coins = {};
         for (const fields in aaState) {
           const field = fields.split("_");
@@ -101,7 +103,11 @@ export const changeActiveAA = address => async (dispatch, getState) => {
             "collateral" in coins[id] &&
             Number(coins[id].amount) !== 0
           ) {
-            const exchange_rate = Number(data_feed_ma);
+            const exchange_rate =
+              "expiry_exchange_rate" in aaState
+                ? Number(aaState.expiry_exchange_rate)
+                : Number(data_feed_ma);
+
             const decimals = params.decimals;
             const liquidation_ratio = Number(params.liquidation_ratio);
             const overcollateralization_ratio = Number(

@@ -40,6 +40,7 @@ const Lot = ({
   dataBase64,
   current_bid,
   setActiveBidInfo,
+  winner_bid,
   isYour
 }) => {
   const dispatch = useDispatch();
@@ -59,17 +60,20 @@ const Lot = ({
         style={{ backgroundColor: isYour ? "#EDEDED" : "none", padding: 10 }}
       >
         <div>
-          <b>{symbol ? truncate(symbol, { length: 12 }) : "Stablecoins"}: </b>
-          <span>{amountValue}</span>
+          <b>Loan amount: </b>
+          <span>
+            {amountValue}{" "}
+            {symbol ? truncate(symbol, { length: 12 }) : "stablecoins"}
+          </span>
         </div>
         <div>
           <b>Owner: </b>
           <span>{owner}</span>
         </div>
         <div>
-          <b>Collateral (GB): </b>
+          <b>Collateral: </b>
           <span>
-            {(collateral / 10 ** 9).toFixed(9)}{" "}
+            {(collateral / 10 ** 9).toFixed(9)} GB{" "}
             {percent && <span>({percent}%)</span>}
           </span>
         </div>
@@ -86,13 +90,13 @@ const Lot = ({
           )}
         </div>
         <div>
-          <b>Current bid (GB): </b>
-          <span>{(current_bid / 10 ** 9).toFixed(9)}</span>
+          <b>{winner_bid ? "Current" : "Min"} bid: </b>
+          <span>{(current_bid / 10 ** 9).toFixed(9)} GB</span>
         </div>
         <div>
-          <b>Profit (GB): </b>
+          <b>Expected profit: </b>
           <span style={{ color: profit > 0 ? "green" : "red" }}>
-            ~{(profit / 10 ** 9).toFixed(9)}
+            ~{(profit / 10 ** 9).toFixed(9)} GB
           </span>
         </div>
         <div style={{ marginTop: 10 }}>

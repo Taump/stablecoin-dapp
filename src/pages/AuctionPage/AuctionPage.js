@@ -26,41 +26,42 @@ export const AuctionPage = props => {
   const [wallets] = useLocalStorage("scWallets");
   const [width] = useWindowSize();
   const coinsAtAuction = [];
-  for (let id in coins) {
-    const opening_collateral = Number(coins[id].opening_collateral);
-    const winner_bid = Number(coins[id].winner_bid);
-    const collateral = Number(coins[id].collateral);
-    const min_bid = opening_collateral - collateral;
-    const amount = Number(coins[id].amount);
-    const isYour = wallets
-      ? wallets.filter(wallet => wallet === coins[id].owner).length > 0
-      : false;
-    const min_collateral =
-      (amount / Math.pow(10, decimals) / exchange_rate) * 1000000000;
-
-    const percent = Math.ceil((collateral / min_collateral) * 100);
-
-    const current_bid = winner_bid ? winner_bid : min_bid;
-    const bid = (winner_bid ? winner_bid * 1.01 : min_bid) + 1000;
-    const profit =
-      Math.min(opening_collateral, collateral + bid) -
-      bid -
-      Math.ceil((1e9 / exchange_rate) * amount);
-    const data = JSON.stringify({ end_auction: 1, id });
-    const dataBase64 = base64url(data);
-    coinsAtAuction.push({
-      id,
-      ...coins[id],
-      profit,
-      percent,
-      bid,
-      amount,
-      dataBase64,
-      current_bid,
-      setActiveBidInfo,
-      isYour
-    });
+  if (exchange_rate) {
+    for (let id in coins) {
+      const opening_collateral = Number(coins[id].opening_collateral);
+      const winner_bid = Number(coins[id].winner_bid);
+      const collateral = Number(coins[id].collateral);
+      const min_bid = opening_collateral - collateral;
+      const amount = Number(coins[id].amount);
+      const isYour = wallets
+        ? wallets.filter(wallet => wallet === coins[id].owner).length > 0
+        : false;
+      const min_collateral =
+        (amount / Math.pow(10, decimals) / exchange_rate) * 1000000000;
+      const percent = Math.ceil((collateral / min_collateral) * 100);
+      const current_bid = winner_bid ? winner_bid : min_bid;
+      const bid = (winner_bid ? winner_bid * 1.01 : min_bid) + 1000;
+      const profit =
+        Math.min(opening_collateral, collateral + bid) -
+        bid -
+        Math.ceil(((1e9 / exchange_rate) * amount) / 10 ** decimals);
+      const data = JSON.stringify({ end_auction: 1, id });
+      const dataBase64 = base64url(data);
+      coinsAtAuction.push({
+        id,
+        ...coins[id],
+        profit,
+        percent,
+        bid,
+        amount,
+        dataBase64,
+        current_bid,
+        setActiveBidInfo,
+        isYour
+      });
+    }
   }
+
   return (
     <Layout title={t("pages.auction.title")} page="auction">
       {!isNaN(Number(liquidation_ratio)) && (
