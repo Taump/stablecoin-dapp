@@ -22,7 +22,15 @@ export const RegistryToken = () => {
   const checkBtn = useRef(null);
   const regBtn = useRef(null);
   const asset = activeInfo.asset;
-  const initToken = `${feed_name}_${expiry_date.replace(/-/g, "")}`;
+  let initToken;
+  const feedNameSplit = feed_name.split("_");
+  if (feedNameSplit.length > 1) {
+    initToken = `${
+      feedNameSplit[feedNameSplit.length - 1]
+    }_${expiry_date.replace(/-/g, "")}`;
+  } else {
+    initToken = `${feed_name}_${expiry_date.replace(/-/g, "")}`;
+  }
   const [token, setToken] = useState({
     value: initToken,
     valid: true
@@ -33,22 +41,18 @@ export const RegistryToken = () => {
   });
   const handleChangeSymbol = ev => {
     const targetToken = ev.target.value.toUpperCase();
-    if (checkToken !== null) {
-      dispatch(clearCheckToken());
-    } else {
-      if (targetToken.length > 0) {
-        if (targetToken.length <= 40) {
-          setToken({ ...token, value: targetToken, valid: true });
-        } else {
-          setToken({
-            ...token,
-            value: targetToken,
-            valid: false
-          });
-        }
+    if (targetToken.length > 0) {
+      if (targetToken.length <= 40) {
+        setToken({ ...token, value: targetToken, valid: true });
       } else {
-        setToken({ ...token, value: targetToken, valid: false });
+        setToken({
+          ...token,
+          value: targetToken,
+          valid: false
+        });
       }
+    } else {
+      setToken({ ...token, value: targetToken, valid: false });
     }
   };
 
@@ -114,7 +118,10 @@ export const RegistryToken = () => {
               <Input
                 value={token.value}
                 size="large"
-                onChange={handleChangeSymbol}
+                onChange={ev => {
+                  dispatch(clearCheckToken());
+                  handleChangeSymbol(ev);
+                }}
                 disabled={pendingCheck}
               />
             </Form.Item>
