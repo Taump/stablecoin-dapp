@@ -9,7 +9,6 @@ import { LoanListByAddress } from "../../components/LoanListByAddress/LoanListBy
 import { IssueStablecoinForm, WalletForm } from "../../forms";
 import { useSelector, useDispatch } from "react-redux";
 import { IssueAsset } from "../../components/IssueAsset/IssueAsset";
-import { ParamsView } from "../../components/ParamsView/ParamsView";
 import { ExpiredForm } from "../../forms/ExpiredForm/ExpiredForm";
 import { changeExpiryStatus } from "../../store/actions/aa";
 import { RegistryToken } from "../../components/RegistryToken/RegistryToken";
@@ -29,6 +28,8 @@ export const HomePage = props => {
   const isExpired = useSelector(state => state.aa.isExpired);
   const symbol = useSelector(state => state.aa.symbol);
   const registryToken = useSelector(state => state.deploy.registryToken);
+  const regTokenSkip = useSelector(state => state.deploy.regTokenSkip);
+
   const [address, setAddress] = useState("");
   let screen = "";
   let totalCollateral = 0;
@@ -51,7 +52,7 @@ export const HomePage = props => {
       screen = "data_feed";
     } else if (!("asset" in activeInfo || activeAssetRequest)) {
       screen = "asset";
-    } else if (registryToken) {
+    } else if ((!symbol && !regTokenSkip) || registryToken) {
       screen = "registryToken";
     } else {
       screen = "home";
@@ -84,7 +85,6 @@ export const HomePage = props => {
       )}
       <Row style={{ marginBottom: 25 }}>
         <SelectAA autoFocus={true} />
-        {active && <ParamsView />}
       </Row>
 
       {screen && screen === "home" && (

@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 
 import { Layout } from "../../components/Layout/Layout";
 import { SelectAA } from "../../components/SelectAA/SelectAA";
-import { ParamsView } from "../../components/ParamsView/ParamsView";
 import base64url from "base64url";
 import { PlaceBidModal } from "../../modals/PlaceBidModal";
 import { useWindowSize } from "../../hooks/useWindowSize";
@@ -57,7 +56,8 @@ export const AuctionPage = props => {
         dataBase64,
         current_bid,
         setActiveBidInfo,
-        isYour
+        isYour,
+        min_bid
       });
     }
   }
@@ -77,7 +77,6 @@ export const AuctionPage = props => {
       )}
       <Row>
         <SelectAA autoFocus={true} />
-        {active && <ParamsView />}
       </Row>
       {active && width >= 1440 && coinsAtAuction.length > 0 && (
         <AuctionFull data={coinsAtAuction} />

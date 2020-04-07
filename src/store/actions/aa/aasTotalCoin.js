@@ -18,7 +18,8 @@ export const aasTotalCoin = () => async (dispatch, getState) => {
         // if (aa.isStable) {
         return client.api
           .getAaStateVars({
-            address: aa.address
+            address: aa.address,
+            var_prefix: "circulating_supply"
           })
           .then(data => {
             const total =

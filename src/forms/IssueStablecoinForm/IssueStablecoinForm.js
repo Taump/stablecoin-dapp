@@ -63,7 +63,6 @@ export const IssueStablecoinForm = () => {
       {overcollateralization_ratio && liquidation_ratio && (
         <div style={{ marginBottom: 15 }}>
           You’ll get your collateral back when you return the stablecoins.{" "}
-          <br />
           Initial collateral {Number(overcollateralization_ratio) * 100}%,
           minimum collateral {Number(liquidation_ratio) * 100}%.
         </div>

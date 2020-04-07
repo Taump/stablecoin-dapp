@@ -13,6 +13,7 @@ import {
 } from "../../store/actions/aa";
 import client from "../../socket";
 import history from "../../history";
+import { subscribeTokenRegistry } from "../../store/actions/aa/subscribeTokenRegistry";
 export const WatcherUpdate = props => {
   const dispatch = useDispatch();
   const aaActive = useSelector(state => state.aa.active);
@@ -100,6 +101,7 @@ export const WatcherUpdate = props => {
   useEffect(() => {
     client.onConnect(async () => {
       dispatch(subscribeBaseAA());
+      dispatch(subscribeTokenRegistry());
       // if (aaActive === null) {
       dispatch(getAasByBase());
       // }

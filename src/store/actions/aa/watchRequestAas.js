@@ -8,7 +8,11 @@ import {
   t
 } from "../../../utils";
 import { ADD_AA_TO_LIST, ASSET_REQUEST, ASSET_RESPONSE } from "../../types/aa";
-import { deployRequest, pendingDeployResponse } from "../deploy";
+import {
+  deployRequest,
+  pendingDeployResponse,
+  tokenRegistryClose
+} from "../deploy";
 import { ADD_AA_NOTIFICATION } from "../../types/notifications";
 import { changeActiveAA } from "./index";
 import {
@@ -20,6 +24,8 @@ import { addCollateral } from "./addCollateral";
 import { repayLoan } from "./repayLoan";
 import { expiryExchangeRate } from "./expiryExchangeRate";
 import { issueStableCoin } from "./issueStableCoin";
+import config from "../../../config";
+import { addSymbol } from "./addSymbol";
 
 const openNotificationRequest = (address, event) => {
   notification.open({
@@ -119,6 +125,27 @@ export const watchRequestAas = () => (dispatch, getState) => {
             result[1],
             aaVars
           );
+          if (result[1].body.aa_address === config.TOKEN_REGISTRY_AA_ADDRESS) {
+            const payload = result[1].body.unit.messages[0].payload;
+            if (payload) {
+              if (payload.symbol && payload.asset) {
+                const activeAsset =
+                  "asset" in store.aa.activeInfo
+                    ? store.aa.activeInfo.asset
+                    : false;
+                if (activeAsset) {
+                  if (activeAsset === payload.asset) {
+                    //  выпуск ассета
+                    openNotificationRequest(
+                      aaActive,
+                      `Request to register the ${payload.symbol} symbol`
+                    );
+                    dispatch(tokenRegistryClose());
+                  }
+                }
+              }
+            }
+          }
           if (
             (notificationObject && notificationObject.AA === aaActive) ||
             (!aaActive && notificationObject)
@@ -190,10 +217,6 @@ export const watchRequestAas = () => (dispatch, getState) => {
                 notificationObject.title
               );
             }
-            dispatch({
-              type: ADD_AA_NOTIFICATION,
-              payload: notificationObject
-            });
             if (
               aaActive === notificationObject.AA &&
               notificationObject.tag === "req_asset"
@@ -239,6 +262,23 @@ export const watchRequestAas = () => (dispatch, getState) => {
             aaVars,
             decimals
           );
+          if (result[1].body.aa_address === config.TOKEN_REGISTRY_AA_ADDRESS) {
+            const res = result[1].body.response;
+            if (res.responseVars) {
+              const asset =
+                "asset" in store.aa.activeInfo && store.aa.activeInfo.asset;
+              if (asset) {
+                if (asset in res.responseVars) {
+                  const symbol = res.responseVars[asset];
+                  dispatch(addSymbol(symbol));
+                  openNotificationRequest(
+                    aaActive,
+                    `Symbol ${symbol} was registered`
+                  );
+                }
+              }
+            }
+          }
           if (
             (notificationObject && notificationObject.AA === aaActive) ||
             (!aaActive && notificationObject)

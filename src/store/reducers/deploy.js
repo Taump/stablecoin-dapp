@@ -9,6 +9,7 @@ import {
   CHECK_TOKEN_CLEAR,
   ADD_TO_TOKEN_REGISTRY_CLOSE
 } from "../types/deploy";
+import { CHANGE_ACTIVE_AA } from "../types/aa";
 
 const initialState = {
   pending: false,
@@ -16,7 +17,8 @@ const initialState = {
   wasIssued: null,
   registryToken: false,
   checkToken: null,
-  checkTokenPending: false
+  checkTokenPending: false,
+  regTokenSkip: false
 };
 
 export const deployReducer = (state = initialState, action) => {
@@ -75,6 +77,15 @@ export const deployReducer = (state = initialState, action) => {
         checkToken: action.payload
       };
     }
+    case CHANGE_ACTIVE_AA: {
+      return {
+        ...state,
+        regTokenSkip: false,
+        registryToken: false,
+        checkToken: null,
+        checkTokenPending: false
+      };
+    }
     case CHECK_TOKEN_CLEAR: {
       return {
         ...state,
@@ -86,7 +97,8 @@ export const deployReducer = (state = initialState, action) => {
         ...state,
         registryToken: false,
         checkToken: null,
-        checkTokenPending: false
+        checkTokenPending: false,
+        regTokenSkip: true
       };
     }
     default:

@@ -93,11 +93,17 @@ const Lot = ({
       </Col>
       <Col xl={{ span: 3 }}>
         {auction_end_ts ? (
-          <Countdown
-            value={moment.unix(auction_end_ts).utc()}
-            onFinish={() => dispatch(endCoinAuction(id))}
-            valueStyle={{ fontSize: 16 }}
-          />
+          <>
+            {moment().isBefore(moment.unix(auction_end_ts)) ? (
+              <Countdown
+                value={moment.unix(auction_end_ts).utc()}
+                onFinish={() => dispatch(endCoinAuction(id))}
+                valueStyle={{ fontSize: 16 }}
+              />
+            ) : (
+              "expired"
+            )}
+          </>
         ) : (
           "—"
         )}

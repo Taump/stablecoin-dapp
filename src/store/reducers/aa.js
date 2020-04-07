@@ -17,7 +17,8 @@ import {
   UPDATE_RATE,
   EXPIRY_STATUS,
   AAS_TOTAL_COIN_LIST_REQUEST,
-  AAS_TOTAL_COIN_LIST_SUCCESS
+  AAS_TOTAL_COIN_LIST_SUCCESS,
+  ADD_SYMBOL_BY_AA
 } from "../types/aa";
 import { ADD_BID_COIN_AUCTION, END_AUCTION_RESPONSE } from "../types/auction";
 
@@ -65,6 +66,12 @@ export const aaReducer = (state = initialState, action) => {
       return {
         ...state,
         activeAssetRequest: true
+      };
+    }
+    case ADD_SYMBOL_BY_AA: {
+      return {
+        ...state,
+        symbol: action.payload.symbol
       };
     }
     case ASSET_RESPONSE: {

@@ -41,7 +41,8 @@ const Lot = ({
   current_bid,
   setActiveBidInfo,
   winner_bid,
-  isYour
+  isYour,
+  min_bid
 }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation("", { i18n });
@@ -77,21 +78,45 @@ const Lot = ({
             {percent && <span>({percent}%)</span>}
           </span>
         </div>
-        <div>
-          <b>Time until ends: </b>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start"
+          }}
+        >
+          <b>Time until ends: </b>{" "}
           {auction_end_ts ? (
-            <Countdown
-              value={moment.unix(auction_end_ts).utc()}
-              onFinish={() => dispatch(endCoinAuction(id))}
-              valueStyle={{ fontSize: 16 }}
-            />
+            <>
+              {moment().isBefore(moment.unix(auction_end_ts)) ? (
+                <Countdown
+                  value={moment.unix(auction_end_ts).utc()}
+                  onFinish={() => dispatch(endCoinAuction(id))}
+                  valueStyle={{ fontSize: 14, marginLeft: 5 }}
+                />
+              ) : (
+                <span style={{ marginLeft: 5 }}>expired</span>
+              )}
+            </>
           ) : (
-            "—"
+            <span style={{ marginLeft: 5 }}>—</span>
           )}
         </div>
         <div>
-          <b>{winner_bid ? "Current" : "Min"} bid: </b>
-          <span>{(current_bid / 10 ** 9).toFixed(9)} GB</span>
+          <b>Current bid: </b>
+          <span>
+            {winner_bid
+              ? `${(Number(winner_bid) / 10 ** 9).toFixed(9)} GB`
+              : "none"}
+          </span>
+        </div>
+        <div>
+          <b>Min bid: </b>
+          <span>
+            {status === "end"
+              ? "already expired"
+              : `${(min_bid / 10 ** 9).toFixed(9)} GB`}
+          </span>
         </div>
         <div>
           <b>Expected profit: </b>
