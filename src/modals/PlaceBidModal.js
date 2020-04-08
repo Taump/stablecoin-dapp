@@ -103,6 +103,10 @@ export const PlaceBidModal = ({ visible, id, min, onCancel }) => {
         </Button>
       ]}
     >
+      <p>
+        It is recommended to send slightly more than the minimum to protect
+        against volatility
+      </p>
       <Form onSubmit={addCollateral}>
         <Form.Item
           hasFeedback

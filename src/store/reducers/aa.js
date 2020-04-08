@@ -69,10 +69,14 @@ export const aaReducer = (state = initialState, action) => {
       };
     }
     case ADD_SYMBOL_BY_AA: {
-      return {
-        ...state,
-        symbol: action.payload.symbol
-      };
+      if (state.active === action.payload.address) {
+        return {
+          ...state,
+          symbol: action.payload.symbol
+        };
+      } else {
+        return state;
+      }
     }
     case ASSET_RESPONSE: {
       return {

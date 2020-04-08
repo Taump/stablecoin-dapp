@@ -54,7 +54,7 @@ export const DeployForm = ({ params }) => {
     },
     auctionPeriod: {
       ...initStateInput,
-      value: "3000"
+      value: "3600"
     }
   });
   const {

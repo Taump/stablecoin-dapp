@@ -7,10 +7,12 @@ import { subscribeAA } from "./";
 import { initAuction } from "../auction";
 import moment from "moment";
 import config from "../../../config";
+import { addRecentStablecoin } from "../recent";
 
 export const changeActiveAA = address => async (dispatch, getState) => {
   try {
     const store = getState();
+    const recentActive = store.aa.listByBase.length > 8;
     const isValid = await isAddressByBase(address);
     const definitionActive = store.aa.listByBase.filter(
       aa => aa.address === address
@@ -167,7 +169,9 @@ export const changeActiveAA = address => async (dispatch, getState) => {
           }
         });
       }
-
+      if (recentActive) {
+        dispatch(addRecentStablecoin(address));
+      }
       const subscriptions = store.aa.subscriptions;
       const isSubscription =
         subscriptions.filter(aa => aa === address).length > 0;

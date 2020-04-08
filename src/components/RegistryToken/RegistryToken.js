@@ -158,14 +158,12 @@ export const RegistryToken = () => {
   };
   const handleChangeDescr = ev => {
     const { value } = ev.target;
-    console.log(value);
     if (value.length < 140) {
       setDescr({ value, valid: true });
     } else {
       setDescr({ value, valid: false });
     }
   };
-  console.log(descr && descr.valid);
   let disabled;
   if (!tokenSupport.valid) {
     disabled = true;

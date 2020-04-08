@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Select } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-
-import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { changeActiveAA } from "../../store/actions/aa";
-import { t } from "../../utils";
+import { createStringDescrForAa, t } from "../../utils";
 import styles from "../SelectAA/SelectAA.module.css";
 import moment from "moment";
 import { ParamsView } from "../ParamsView/ParamsView";
@@ -13,36 +11,22 @@ const { Option, OptGroup } = Select;
 export const SelectAA = props => {
   const [panelActive, setPanelActive] = useState(null);
   const dispatch = useDispatch();
-  const aaListByBase = useSelector(state => state.aa.listByBase);
-  const aaActive = useSelector(state => state.aa.active);
-  const listByBaseLoaded = useSelector(state => state.aa.listByBaseLoaded);
-  const [scRecentAas, setScRecentAas] = useLocalStorage("scRecentAas", []);
-  const recentActive = aaListByBase.length > 8;
-
+  const listByBase = useSelector(state => state.aa.listByBase);
+  const active = useSelector(state => state.aa.active);
+  const loaded = useSelector(state => state.aa.listByBaseLoaded);
+  const symbols = useSelector(state => state.symbols);
+  const recentActive = listByBase.length > 8;
+  const recentStablecoins = useSelector(state => state.recent);
   const handleSelectAA = address => {
     dispatch(changeActiveAA(address));
-    let aaListStorage = scRecentAas;
-    if (recentActive) {
-      const findAaInRecent = aaListStorage.findIndex(aa => aa === address);
-      if (findAaInRecent === -1) {
-        if (aaListStorage && aaListStorage.length >= 5) {
-          aaListStorage.pop();
-        }
-        aaListStorage.unshift(address);
-      } else {
-        [aaListStorage[0], aaListStorage[findAaInRecent]] = [
-          aaListStorage[findAaInRecent],
-          aaListStorage[0]
-        ];
-      }
-      setScRecentAas(aaListStorage);
-    }
-    setPanelActive(null);
   };
 
-  const notRecentAaListByBase = aaListByBase.filter(
-    aaBase => scRecentAas.find(aa => aa === aaBase.address) === undefined
-  );
+  const notRecentAaListByBase =
+    listByBase &&
+    listByBase.filter(
+      aaBase =>
+        recentStablecoins.find(aa => aa === aaBase.address) === undefined
+    );
 
   const test = notRecentAaListByBase.slice().sort((prev, next) => {
     const prevTime = prev.definition["1"].params.expiry_date;
@@ -55,9 +39,9 @@ export const SelectAA = props => {
         className={styles.select}
         placeholder={t("components.selectAA.placeholder")}
         onChange={handleSelectAA}
-        value={aaActive || 0}
+        value={active || 0}
         size="large"
-        loading={!listByBaseLoaded}
+        loading={!loaded}
         showSearch={true}
         optionFilterProp="children"
         filterOption={(input, option) => {
@@ -70,19 +54,31 @@ export const SelectAA = props => {
         <Option key={"AA0"} value={0} disabled>
           {t("components.selectAA.placeholder")}
         </Option>
-        {recentActive && scRecentAas.length >= 1 && (
+        {recentActive && recentStablecoins.length >= 1 && (
           <OptGroup label={t("components.selectAA.group.recent")}>
-            {scRecentAas &&
-              scRecentAas.map((address, i) => {
-                const aa = aaListByBase.find(aa => aa.address === address);
+            {recentStablecoins &&
+              recentStablecoins.map((address, i) => {
+                const aa = listByBase.find(aa => aa.address === address);
                 if (aa) {
+                  const symbol =
+                    aa.address in symbols
+                      ? symbols[aa.address].symbol
+                      : undefined;
+                  const { feed_name, expiry_date } = aa.definition["1"].params;
+                  const view = createStringDescrForAa(
+                    aa.address,
+                    feed_name,
+                    expiry_date,
+                    symbol
+                  );
                   return (
                     <Option
-                      key={"AA" + i}
+                      key={"AArecent" + i}
                       value={aa.address}
+                      view={view}
                       style={{ fontWeight: "regular" }}
                     >
-                      {aa.view}
+                      {view}
                     </Option>
                   );
                 }
@@ -93,25 +89,36 @@ export const SelectAA = props => {
         <OptGroup
           label={
             (recentActive &&
-              scRecentAas.length >= 1 &&
+              recentStablecoins.length >= 1 &&
               t("components.selectAA.group.other")) ||
             t("components.selectAA.group.all")
           }
         >
-          {test.map((aa, i) => {
-            return (
-              <Option
-                key={"AA" + i}
-                value={aa.address}
-                style={{ fontWeight: "regular" }}
-              >
-                {aa.view}
-              </Option>
-            );
-          })}
+          {test &&
+            test.map((aa, i) => {
+              const symbol =
+                aa.address in symbols ? symbols[aa.address].symbol : undefined;
+              const { feed_name, expiry_date } = aa.definition["1"].params;
+              const view = createStringDescrForAa(
+                aa.address,
+                feed_name,
+                expiry_date,
+                symbol
+              );
+              return (
+                <Option
+                  key={"AA" + i}
+                  value={aa.address}
+                  view={view}
+                  style={{ fontWeight: "regular" }}
+                >
+                  {view}
+                </Option>
+              );
+            })}
         </OptGroup>
       </Select>
-      {aaActive && (
+      {active && (
         <ParamsView panelActive={panelActive} setPanelActive={setPanelActive} />
       )}
     </>

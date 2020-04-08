@@ -139,7 +139,7 @@ const Lot = ({
               type="primary"
               onClick={() => {
                 setActiveBidInfo({
-                  min: Math.ceil(bid + 1000) / 10 ** 9,
+                  min: Math.ceil(bid) / 10 ** 9,
                   id,
                   visible: true
                 });

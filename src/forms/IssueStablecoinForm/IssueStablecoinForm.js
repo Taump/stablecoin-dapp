@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { t } from "../../utils";
 
 import config from "../../config";
+import { LinkToODEX } from "../../components/LinkToODEX/LinkToODEX";
 
 const { Title } = Typography;
 
@@ -12,6 +13,7 @@ export const IssueStablecoinForm = () => {
   const [count, setCount] = useState("");
   const issueBtn = useRef(null);
   const exchange_rate = useSelector(state => state.aa.activeDataFeed);
+  const symbol = useSelector(state => state.aa.symbol);
   const { overcollateralization_ratio, liquidation_ratio } = useSelector(
     state => state.aa.activeParams
   );
@@ -59,6 +61,10 @@ export const IssueStablecoinForm = () => {
             newValue: newValue / 10 ** 9
           })}
         </a>
+        <LinkToODEX
+          symbol={symbol}
+          style={{ paddingLeft: 10, paddingRight: 10, whiteSpace: "pre" }}
+        />
       </Form.Item>
       {overcollateralization_ratio && liquidation_ratio && (
         <div style={{ marginBottom: 15 }}>

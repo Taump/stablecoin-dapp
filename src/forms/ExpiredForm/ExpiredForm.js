@@ -6,6 +6,7 @@ import config from "../../config";
 import base64url from "base64url";
 import { t } from "../../utils";
 import { ExchangeStablecoinForm } from "../ExchangeStablecoinForm/ExchangeStablecoinForm";
+import { LinkToODEX } from "../../components/LinkToODEX/LinkToODEX";
 
 const { Title } = Typography;
 
@@ -26,6 +27,7 @@ export const ExpiredForm = () => {
             value={Number(expiry_exchange_rate)}
             suffix={<small>{symbol ? symbol : "STABLECOINS"}</small>}
           />
+          <LinkToODEX symbol={symbol} style={{ whiteSpace: "pre" }} />
           <ExchangeStablecoinForm />
         </>
       ) : (

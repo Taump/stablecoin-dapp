@@ -39,7 +39,7 @@ export const AuctionPage = props => {
         (amount / Math.pow(10, decimals) / exchange_rate) * 1000000000;
       const percent = Math.ceil((collateral / min_collateral) * 100);
       const current_bid = winner_bid ? winner_bid : min_bid;
-      const bid = (winner_bid ? winner_bid * 1.01 : min_bid) + 1000;
+      const bid = winner_bid ? winner_bid * 1.01 : min_bid;
       const profit =
         Math.min(opening_collateral, collateral + bid) -
         bid -
